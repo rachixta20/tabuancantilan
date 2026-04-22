@@ -72,10 +72,10 @@
                     <td class="px-5 py-4">
                         @php
                             $colors = ['approved'=>'primary','pending'=>'amber','rejected'=>'red','suspended'=>'gray'];
-                            $status = $u->account_status ?? 'approved';
+                            $statusVal = $u->account_status?->value ?? 'approved';
                         @endphp
-                        <span class="badge bg-{{ $colors[$status] }}-100 text-{{ $colors[$status] }}-700 capitalize">
-                            {{ $status }}
+                        <span class="badge bg-{{ $colors[$statusVal] ?? 'gray' }}-100 text-{{ $colors[$statusVal] ?? 'gray' }}-700 capitalize">
+                            {{ $statusVal }}
                         </span>
                     </td>
                     <td class="px-5 py-4 text-gray-400 text-xs">{{ $u->created_at->format('M d, Y') }}</td>
@@ -84,24 +84,24 @@
                             <a href="{{ route('admin.users.view', $u) }}"
                                class="text-xs text-blue-600 hover:underline font-medium">View</a>
 
-                            @if($u->account_status === 'pending' && $u->role === 'farmer')
+                            @if($u->isPending() && $u->role === 'farmer')
                                 <form action="{{ route('admin.users.approve', $u) }}" method="POST">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-primary btn-sm text-xs py-1 px-2.5">Approve</button>
                                 </form>
                             @endif
 
-                            @if(in_array($u->account_status, ['pending','approved']) && $u->role !== 'admin')
+                            @if(($u->isPending() || $u->isApproved()) && $u->role !== 'admin')
                                 <button onclick="document.getElementById('reject-{{ $u->id }}').classList.toggle('hidden')"
                                         class="btn-danger btn-sm text-xs py-1 px-2.5">Reject</button>
                             @endif
 
-                            @if($u->account_status === 'suspended')
+                            @if($u->isSuspended())
                                 <form action="{{ route('admin.users.reinstate', $u) }}" method="POST">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-outline btn-sm text-xs py-1 px-2.5">Reinstate</button>
                                 </form>
-                            @elseif($u->account_status === 'approved' && $u->role !== 'admin')
+                            @elseif($u->isApproved() && $u->role !== 'admin')
                                 <button onclick="document.getElementById('suspend-{{ $u->id }}').classList.toggle('hidden')"
                                         class="text-xs text-gray-500 hover:text-red-600 font-medium transition-colors">Suspend</button>
                             @endif
