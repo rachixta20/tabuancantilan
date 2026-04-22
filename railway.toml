@@ -4,3 +4,5 @@ buildCommand = "npm run build && mkdir -p storage/framework/{sessions,views,cach
 
 [deploy]
 startCommand = "bash start.sh"
+healthcheckPath = "/"
+healthcheckTimeout = 30
