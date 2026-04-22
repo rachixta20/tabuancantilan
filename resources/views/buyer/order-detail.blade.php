@@ -19,7 +19,7 @@
                 <p class="text-sm text-gray-400 mt-0.5">Placed on {{ $order->created_at->format('F d, Y \a\t h:i A') }}</p>
             </div>
             <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize text-sm px-3 py-1">
-                {{ $order->status?->label() ?? $order->status }}
+                {{ $order->status?->label() ?? $order->status?->value }}
             </span>
         </div>
 
@@ -33,9 +33,9 @@
             </div>
             <div class="bg-gray-50 rounded-xl p-3">
                 <p class="text-gray-400 text-xs mb-1">Payment</p>
-                <p class="font-semibold text-gray-800">{{ $order->payment_method?->label() ?? $order->payment_method }}</p>
+                <p class="font-semibold text-gray-800">{{ $order->payment_method?->label() ?? $order->payment_method?->value }}</p>
                 <span class="badge {{ $order->payment_status?->value === 'paid' ? 'bg-primary-100 text-primary-700' : 'bg-amber-100 text-amber-700' }} mt-1">
-                    {{ $order->payment_status?->label() ?? $order->payment_status }}
+                    {{ $order->payment_status?->label() ?? $order->payment_status?->value }}
                 </span>
             </div>
         </div>
