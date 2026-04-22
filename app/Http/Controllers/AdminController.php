@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReportStatus;
 use App\Models\AdminAuditLog;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -171,5 +173,38 @@ class AdminController extends Controller
     {
         $logs = AdminAuditLog::with('admin')->latest()->paginate(25);
         return view('admin.audit-log', compact('logs'));
+    }
+
+    public function reports(Request $request)
+    {
+        $query = Report::with(['reporter', 'reportedUser', 'reportedProduct', 'order']);
+        if ($request->filled('status')) $query->where('status', $request->status);
+        if ($request->filled('type'))   $query->where('type', $request->type);
+        $reports      = $query->latest()->paginate(15);
+        $pendingCount = Report::where('status', ReportStatus::Pending)->count();
+        return view('admin.reports', compact('reports', 'pendingCount'));
+    }
+
+    public function viewReport(Report $report)
+    {
+        $report->load(['reporter', 'reportedUser', 'reportedProduct', 'order', 'resolver']);
+        return view('admin.report-detail', compact('report'));
+    }
+
+    public function resolveReport(Request $request, Report $report)
+    {
+        $request->validate([
+            'action'      => 'required|in:reviewed,resolved,dismissed',
+            'admin_notes' => 'nullable|string|max:1000',
+        ]);
+
+        $report->update([
+            'status'      => $request->action,
+            'admin_notes' => $request->admin_notes,
+            'resolved_by' => auth()->id(),
+            'resolved_at' => now(),
+        ]);
+
+        return back()->with('success', 'Report has been ' . $request->action . '.');
     }
 }

@@ -136,6 +136,13 @@
                     <span class="badge bg-primary-100 text-primary-700 ml-auto">✓ Verified</span>
                 @endif
             </div>
+
+            @auth
+                <div class="mt-3 text-right">
+                    <a href="{{ route('reports.create', ['product_id' => $product->id, 'user_id' => $product->seller_id]) }}"
+                       class="text-xs text-gray-400 hover:text-red-500 transition-colors">Report this listing</a>
+                </div>
+            @endauth
         </div>
     </div>
 

@@ -144,6 +144,12 @@
         </div>
     @endif
 
+    {{-- Report --}}
+    <div class="mb-5 text-right">
+        <a href="{{ route('reports.create', ['user_id' => $order->seller_id, 'order_id' => $order->id]) }}"
+           class="text-xs text-gray-400 hover:text-red-500 transition-colors">Report an issue with this order</a>
+    </div>
+
     {{-- Review Form --}}
     @if($order->status?->value === 'delivered')
         <div class="card p-5">

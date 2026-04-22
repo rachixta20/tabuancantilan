@@ -7,6 +7,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\FarmerController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 // Public
@@ -69,6 +70,12 @@ Route::middleware(['auth', 'role:farmer'])->prefix('farmer')->name('farmer.')->g
     Route::patch('/orders/{order}/status', [FarmerController::class, 'updateOrderStatus'])->name('orders.status');
 });
 
+// Reports
+Route::middleware('auth')->prefix('reports')->name('reports.')->group(function () {
+    Route::get('/create', [ReportController::class, 'create'])->name('create');
+    Route::post('/', [ReportController::class, 'store'])->name('store');
+});
+
 // Messages
 Route::middleware('auth')->prefix('messages')->name('messages.')->group(function () {
     Route::get('/', [MessageController::class, 'index'])->name('index');
@@ -95,4 +102,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::get('/audit-log', [AdminController::class, 'auditLog'])->name('audit-log');
+    Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
+    Route::get('/reports/{report}', [AdminController::class, 'viewReport'])->name('reports.view');
+    Route::patch('/reports/{report}/resolve', [AdminController::class, 'resolveReport'])->name('reports.resolve');
 });
