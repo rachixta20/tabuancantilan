@@ -20,7 +20,7 @@
             'rejected'  => ['bg-red-50 border-red-200 text-red-800',         '❌ Application Rejected'],
             'suspended' => ['bg-gray-100 border-gray-300 text-gray-700',     '🚫 Account Suspended'],
         ];
-        $banner = $banners[$user->account_status ?? 'approved'];
+        $banner = $banners[$user->account_status?->value ?? 'approved'];
     @endphp
     <div class="border rounded-xl px-5 py-3 mb-6 flex items-center justify-between {{ $banner[0] }}">
         <span class="font-semibold">{{ $banner[1] }}</span>
@@ -155,7 +155,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                 {{-- Approve --}}
-                @if(in_array($user->account_status, ['pending', 'rejected']))
+                @if($user->isPending() || $user->isRejected())
                     <div class="bg-primary-50 border border-primary-200 rounded-xl p-4">
                         <p class="text-sm font-semibold text-primary-800 mb-1">✅ Approve Seller</p>
                         <p class="text-xs text-primary-600 mb-3">Grant access to list and sell products.</p>
@@ -167,7 +167,7 @@
                 @endif
 
                 {{-- Reject --}}
-                @if(in_array($user->account_status, ['pending', 'approved']))
+                @if($user->isPending() || $user->isApproved())
                     <div class="bg-red-50 border border-red-200 rounded-xl p-4" x-data="{ open: false }">
                         <p class="text-sm font-semibold text-red-800 mb-1">❌ Reject Application</p>
                         <p class="text-xs text-red-600 mb-3">Deny seller access with a reason.</p>
@@ -185,7 +185,7 @@
                 @endif
 
                 {{-- Suspend --}}
-                @if($user->account_status === 'approved')
+                @if($user->isApproved())
                     <div class="bg-gray-50 border border-gray-200 rounded-xl p-4" x-data="{ open: false }">
                         <p class="text-sm font-semibold text-gray-800 mb-1">🚫 Suspend Account</p>
                         <p class="text-xs text-gray-500 mb-3">Temporarily block this user from the platform.</p>
@@ -203,7 +203,7 @@
                 @endif
 
                 {{-- Reinstate --}}
-                @if($user->account_status === 'suspended')
+                @if($user->isSuspended())
                     <div class="bg-primary-50 border border-primary-200 rounded-xl p-4">
                         <p class="text-sm font-semibold text-primary-800 mb-1">🔓 Reinstate Account</p>
                         <p class="text-xs text-primary-600 mb-3">Restore access to the platform.</p>

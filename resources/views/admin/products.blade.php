@@ -45,18 +45,21 @@
                     <td class="px-5 py-4 text-gray-600">{{ $product->seller->name }}</td>
                     <td class="px-5 py-4 font-semibold text-gray-800">₱{{ number_format($product->price,2) }}</td>
                     <td class="px-5 py-4">
-                        @php $colors = ['active'=>'primary','pending'=>'amber','inactive'=>'red']; @endphp
-                        <span class="badge bg-{{ $colors[$product->status] }}-100 text-{{ $colors[$product->status] }}-700 capitalize">{{ $product->status }}</span>
+                        @php
+                            $colors = ['active'=>'primary','pending'=>'amber','inactive'=>'red'];
+                            $statusVal = $product->status?->value ?? 'inactive';
+                        @endphp
+                        <span class="badge bg-{{ $colors[$statusVal] ?? 'gray' }}-100 text-{{ $colors[$statusVal] ?? 'gray' }}-700 capitalize">{{ $statusVal }}</span>
                     </td>
                     <td class="px-5 py-4">
                         <div class="flex gap-2">
-                            @if($product->status === 'pending')
+                            @if($product->status?->value === 'pending')
                                 <form action="{{ route('admin.products.approve', $product) }}" method="POST">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-primary btn-sm text-xs py-1.5 px-3">Approve</button>
                                 </form>
                             @endif
-                            @if($product->status !== 'inactive')
+                            @if($product->status?->value !== 'inactive')
                                 <form action="{{ route('admin.products.reject', $product) }}" method="POST">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-danger btn-sm text-xs py-1.5 px-3">Reject</button>

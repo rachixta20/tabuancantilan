@@ -28,9 +28,9 @@
                     <td class="px-5 py-4 text-gray-600">{{ $order->buyer->name }}</td>
                     <td class="px-5 py-4 text-gray-600">{{ $order->seller->name }}</td>
                     <td class="px-5 py-4 font-bold text-gray-900">₱{{ number_format($order->total,2) }}</td>
-                    <td class="px-5 py-4 uppercase text-xs text-gray-500">{{ $order->payment_method }}</td>
+                    <td class="px-5 py-4 uppercase text-xs text-gray-500">{{ $order->payment_method?->value }}</td>
                     <td class="px-5 py-4">
-                        <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize">{{ $order->status }}</span>
+                        <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize">{{ $order->status?->value }}</span>
                     </td>
                     <td class="px-5 py-4 text-gray-400 text-xs">{{ $order->created_at->format('M d, Y') }}</td>
                 </tr>

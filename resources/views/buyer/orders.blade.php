@@ -17,10 +17,10 @@
                 </div>
                 <div class="flex items-center gap-3 flex-shrink-0 flex-wrap">
                     <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize text-xs px-3 py-1">
-                        {{ $order->status }}
+                        {{ $order->status?->value }}
                     </span>
                     <a href="{{ route('buyer.order-detail', $order) }}" class="btn-secondary btn-sm text-xs">View Details</a>
-                    @if(in_array($order->status, ['pending', 'confirmed']))
+                    @if($order->canBeCancelledByBuyer())
                         <form action="{{ route('buyer.orders.cancel', $order) }}" method="POST"
                               onsubmit="return confirm('Cancel this order?')">
                             @csrf @method('PATCH')
@@ -45,7 +45,7 @@
                 @endforeach
             </div>
             <div class="flex items-center justify-between border-t border-gray-50 pt-3">
-                <span class="text-sm text-gray-500">Total · {{ strtoupper($order->payment_method) }}</span>
+                <span class="text-sm text-gray-500">Total · {{ strtoupper($order->payment_method?->value ?? '') }}</span>
                 <span class="text-lg font-bold text-primary-700">₱{{ number_format($order->total, 2) }}</span>
             </div>
         </div>

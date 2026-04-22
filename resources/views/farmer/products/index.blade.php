@@ -49,9 +49,12 @@
                             </span>
                         </td>
                         <td class="px-5 py-4">
-                            @php $colors = ['active'=>'primary','pending'=>'amber','inactive'=>'red']; @endphp
-                            <span class="badge bg-{{ $colors[$product->status] }}-100 text-{{ $colors[$product->status] }}-700 capitalize">
-                                {{ $product->status }}
+                            @php
+                                $colors = ['active'=>'primary','pending'=>'amber','inactive'=>'red'];
+                                $statusVal = $product->status?->value ?? 'inactive';
+                            @endphp
+                            <span class="badge bg-{{ $colors[$statusVal] ?? 'gray' }}-100 text-{{ $colors[$statusVal] ?? 'gray' }}-700 capitalize">
+                                {{ $statusVal }}
                             </span>
                         </td>
                         <td class="px-5 py-4">

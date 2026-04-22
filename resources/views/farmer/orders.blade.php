@@ -37,22 +37,22 @@
                     <td class="px-5 py-4 text-gray-500">{{ $order->items->count() }} item(s)</td>
                     <td class="px-5 py-4 font-bold text-gray-900">₱{{ number_format($order->total, 2) }}</td>
                     <td class="px-5 py-4">
-                        <span class="uppercase text-xs font-semibold text-gray-600">{{ $order->payment_method }}</span>
+                        <span class="uppercase text-xs font-semibold text-gray-600">{{ $order->payment_method?->value }}</span>
                     </td>
                     <td class="px-5 py-4">
                         <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize">
-                            {{ $order->status }}
+                            {{ $order->status?->value }}
                         </span>
                     </td>
                     <td class="px-5 py-4">
-                        @if(!in_array($order->status, ['delivered', 'cancelled']))
+                        @if(!in_array($order->status?->value, ['delivered', 'cancelled']))
                             <form action="{{ route('farmer.orders.status', $order) }}" method="POST" class="flex gap-2">
                                 @csrf @method('PATCH')
                                 <select name="status" class="input text-xs py-1.5 pr-6 w-auto">
                                     @php
                                         $nexts = ['pending'=>['confirmed','cancelled'],'confirmed'=>['processing','cancelled'],'processing'=>['shipped'],'shipped'=>['delivered']];
                                     @endphp
-                                    @foreach($nexts[$order->status] ?? [] as $next)
+                                    @foreach($nexts[$order->status?->value] ?? [] as $next)
                                         <option value="{{ $next }}" class="capitalize">{{ ucfirst($next) }}</option>
                                     @endforeach
                                 </select>

@@ -67,7 +67,7 @@
                     </div>
                     <div class="text-right flex-shrink-0">
                         <p class="text-sm font-bold text-gray-900">₱{{ number_format($order->total, 2) }}</p>
-                        <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize">{{ $order->status }}</span>
+                        <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize">{{ $order->status?->value }}</span>
                     </div>
                 </div>
             @empty

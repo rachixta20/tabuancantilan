@@ -5,7 +5,7 @@
 <div class="min-h-screen flex items-center justify-center py-12 px-4">
     <div class="w-full max-w-lg text-center">
 
-        @if($user->account_status === 'pending')
+        @if($user->isPending())
             <div class="card p-10">
                 <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">⏳</div>
                 <h1 class="text-2xl font-bold text-gray-900 mb-3">Application Under Review</h1>
@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-        @elseif($user->account_status === 'rejected')
+        @elseif($user->isRejected())
             <div class="card p-10">
                 <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">❌</div>
                 <h1 class="text-2xl font-bold text-gray-900 mb-3">Application Not Approved</h1>
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-        @elseif($user->account_status === 'suspended')
+        @elseif($user->isSuspended())
             <div class="card p-10">
                 <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">🚫</div>
                 <h1 class="text-2xl font-bold text-gray-900 mb-3">Account Suspended</h1>
