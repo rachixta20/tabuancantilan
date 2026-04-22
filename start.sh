@@ -15,7 +15,12 @@ php artisan db:seed --force 2>/dev/null || echo "Seeder warning — check logs."
 echo "Linking storage..."
 php artisan storage:link --force 2>/dev/null || true
 
-# Cache config/routes/events/views at runtime so DB env vars are available
+# Clear all stale caches, then rebuild with current code
+php artisan config:clear
+php artisan route:clear
+php artisan event:clear
+php artisan view:clear
+php artisan cache:clear
 php artisan config:cache
 php artisan event:cache
 php artisan route:cache
