@@ -30,10 +30,10 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
         @php
             $statItems = [
-                ['label'=>'Total Products','value'=>$stats['products'],'icon'=>'📦','color'=>'bg-blue-50 text-blue-600'],
-                ['label'=>'Total Orders','value'=>$stats['orders'],'icon'=>'🧾','color'=>'bg-purple-50 text-purple-600'],
-                ['label'=>'Revenue','value'=>'₱'.number_format($stats['revenue'],2),'icon'=>'💰','color'=>'bg-primary-50 text-primary-600'],
-                ['label'=>'Pending Orders','value'=>$stats['pending'],'icon'=>'⏳','color'=>'bg-amber-50 text-amber-600'],
+                ['label'=>'Total Products', 'value'=>$stats['products'],                                   'icon'=>'📦','color'=>'bg-blue-50 text-blue-600'],
+                ['label'=>'Total Orders',   'value'=>$stats['orders'],                                     'icon'=>'🧾','color'=>'bg-purple-50 text-purple-600'],
+                ['label'=>'Your Earnings',  'value'=>'₱'.number_format($stats['earnings'],2),              'icon'=>'💵','color'=>'bg-primary-50 text-primary-600'],
+                ['label'=>'Pending Orders', 'value'=>$stats['pending'],                                    'icon'=>'⏳','color'=>'bg-amber-50 text-amber-600'],
             ];
         @endphp
         @foreach($statItems as $s)
@@ -46,6 +46,13 @@
             </div>
         @endforeach
     </div>
+
+    @if($stats['commission_paid'] > 0)
+    <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-6 text-sm text-amber-800">
+        <span class="text-lg">ℹ️</span>
+        <span>Platform commission paid: <strong>₱{{ number_format($stats['commission_paid'], 2) }}</strong> ({{ config('marketplace.commission_rate') }}% of your subtotal on delivered orders). Your earnings shown above are already after commission.</span>
+    </div>
+    @endif
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {{-- Recent Orders --}}

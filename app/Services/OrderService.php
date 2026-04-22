@@ -34,10 +34,13 @@ class OrderService
                     }
                 }
 
-                $subtotal    = $items->sum(fn($item) => $item->product->price * $item->quantity);
-                $deliveryFee = $paymentMethod->hasDeliveryFee()
+                $subtotal       = $items->sum(fn($item) => $item->product->price * $item->quantity);
+                $deliveryFee    = $paymentMethod->hasDeliveryFee()
                     ? config('marketplace.delivery_fee', 50)
                     : 0;
+                $commissionRate = config('marketplace.commission_rate', 5) / 100;
+                $platformFee    = round($subtotal * $commissionRate, 2);
+                $sellerPayout   = round($subtotal - $platformFee, 2);
 
                 $order = Order::create([
                     'order_number'     => Order::generateOrderNumber(),
@@ -45,6 +48,8 @@ class OrderService
                     'seller_id'        => $sellerId,
                     'subtotal'         => $subtotal,
                     'delivery_fee'     => $deliveryFee,
+                    'platform_fee'     => $platformFee,
+                    'seller_payout'    => $sellerPayout,
                     'total'            => $subtotal + $deliveryFee,
                     'payment_method'   => $data['payment_method'],
                     'delivery_address' => $data['delivery_address'] ?? null,

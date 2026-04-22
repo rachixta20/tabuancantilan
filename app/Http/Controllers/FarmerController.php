@@ -23,11 +23,13 @@ class FarmerController extends Controller
         if (!$user->isApproved()) {
             return view('farmer.pending', ['user' => $user]);
         }
+        $deliveredOrders = $user->ordersAsSeller()->where('status', 'delivered');
         $stats = [
-            'products'   => $user->products()->count(),
-            'orders'     => $user->ordersAsSeller()->count(),
-            'revenue'    => $user->ordersAsSeller()->where('status', 'delivered')->sum('total'),
-            'pending'    => $user->ordersAsSeller()->where('status', 'pending')->count(),
+            'products'        => $user->products()->count(),
+            'orders'          => $user->ordersAsSeller()->count(),
+            'earnings'        => $deliveredOrders->sum('seller_payout'),
+            'commission_paid' => $deliveredOrders->sum('platform_fee'),
+            'pending'         => $user->ordersAsSeller()->where('status', 'pending')->count(),
         ];
         $recentOrders = $user->ordersAsSeller()->with(['buyer', 'items.product'])->latest()->take(5)->get();
         $topProducts  = $user->products()->active()->orderByDesc('total_sold')->take(5)->get();

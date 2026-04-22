@@ -30,13 +30,13 @@
 
 @section('content')
     {{-- Stats --}}
-    <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+    <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
         @php
             $statItems = [
                 ['label'=>'Total Users',    'value'=>$stats['users'],   'icon'=>'👥','color'=>'bg-blue-50 text-blue-600'],
                 ['label'=>'Active Farmers', 'value'=>$stats['farmers'], 'icon'=>'🌾','color'=>'bg-primary-50 text-primary-600'],
                 ['label'=>'Products',       'value'=>$stats['products'],'icon'=>'📦','color'=>'bg-purple-50 text-purple-600'],
-                ['label'=>'Revenue',        'value'=>'₱'.number_format($stats['revenue'],0),'icon'=>'💰','color'=>'bg-amber-50 text-amber-600'],
+                ['label'=>'Total Orders',   'value'=>$stats['orders'],  'icon'=>'🧾','color'=>'bg-gray-50 text-gray-600'],
             ];
         @endphp
         @foreach($statItems as $s)
@@ -48,6 +48,34 @@
                 </div>
             </div>
         @endforeach
+    </div>
+
+    {{-- Revenue Cards --}}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div class="stat-card border-l-4 border-amber-400">
+            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl shrink-0">💰</div>
+            <div>
+                <p class="text-2xl font-bold text-gray-900">₱{{ number_format($stats['platform_revenue'], 2) }}</p>
+                <p class="text-sm text-gray-500">Platform Earnings</p>
+                <p class="text-xs text-amber-600 font-medium mt-0.5">{{ $stats['commission_rate'] }}% commission on delivered orders</p>
+            </div>
+        </div>
+        <div class="stat-card border-l-4 border-primary-400">
+            <div class="w-12 h-12 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center text-xl shrink-0">📊</div>
+            <div>
+                <p class="text-2xl font-bold text-gray-900">₱{{ number_format($stats['gmv'], 2) }}</p>
+                <p class="text-sm text-gray-500">Gross Merchandise Value</p>
+                <p class="text-xs text-gray-400 font-medium mt-0.5">Total value of delivered orders</p>
+            </div>
+        </div>
+        <div class="stat-card border-l-4 border-blue-400">
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl shrink-0">🏪</div>
+            <div>
+                <p class="text-2xl font-bold text-gray-900">₱{{ number_format(max(0, $stats['gmv'] - $stats['platform_revenue']), 2) }}</p>
+                <p class="text-sm text-gray-500">Seller Payouts</p>
+                <p class="text-xs text-gray-400 font-medium mt-0.5">Revenue distributed to sellers</p>
+            </div>
+        </div>
     </div>
 
     {{-- Alert badges --}}

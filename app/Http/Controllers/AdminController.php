@@ -20,7 +20,9 @@ class AdminController extends Controller
             'buyers'            => User::where('role', 'buyer')->count(),
             'products'          => Product::count(),
             'orders'            => Order::count(),
-            'revenue'           => Order::where('status', 'delivered')->sum('total'),
+            'gmv'               => Order::where('status', 'delivered')->sum('total'),
+            'platform_revenue'  => Order::where('status', 'delivered')->sum('platform_fee'),
+            'commission_rate'   => config('marketplace.commission_rate', 5),
             'pending_products'  => Product::where('status', 'pending')->count(),
             'pending_sellers'   => User::where('role', 'farmer')->where('account_status', 'pending')->count(),
         ];
