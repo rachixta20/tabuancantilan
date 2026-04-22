@@ -7,9 +7,9 @@ echo "=== TABUAN Startup ==="
 echo "Running migrations..."
 php artisan migrate --force
 
-# Seed database only if no admin exists yet
-echo "Checking seed status..."
-php artisan db:seed --force 2>/dev/null || echo "Seeder skipped (already seeded)."
+# Seed database (admin is always upserted, demo data only runs once)
+echo "Running seeder..."
+php artisan db:seed --force 2>/dev/null || echo "Seeder warning — check logs."
 
 # Create storage symlink
 echo "Linking storage..."

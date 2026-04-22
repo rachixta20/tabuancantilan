@@ -13,12 +13,16 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        if (User::where('email', 'admin@tabuan.com')->exists()) {
-            $this->command->info('Already seeded — skipping.');
+        // Always ensure the admin account exists with the correct role.
+        User::updateOrCreate(
+            ['email' => 'admin@tabuan.com'],
+            ['name' => 'Admin TABUAN', 'role' => 'admin', 'password' => Hash::make('password'), 'account_status' => 'approved', 'is_active' => true, 'is_verified' => true, 'location' => 'Cantilan, Surigao del Sur']
+        );
+
+        if (User::where('role', 'farmer')->exists()) {
+            $this->command->info('Already seeded — skipping demo data.');
             return;
         }
-
-        User::create(['name'=>'Admin TABUAN','email'=>'admin@tabuan.com','role'=>'admin','password'=>Hash::make('password'),'account_status'=>'approved','is_active'=>true,'is_verified'=>true,'location'=>'Cantilan, Surigao del Sur']);
 
         $farmersData = [
             ['name'=>'Juan dela Cruz','email'=>'juan@tabuan.com','farm_name'=>"Juan's Organic Farm",'barangay'=>'Bunawan','purok'=>'3','latitude'=>9.3139,'longitude'=>125.9897,'bio'=>'Third-generation farmer specializing in organic vegetables and herbs.'],
