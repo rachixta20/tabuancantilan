@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 
+@variant dark (&:where(.dark, .dark *));
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -24,7 +26,13 @@
 
 @layer base {
     body {
-        @apply antialiased bg-gray-50 text-gray-900;
+        @apply antialiased bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+    }
+    input, textarea, select {
+        @apply dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100;
+    }
+    input::placeholder, textarea::placeholder {
+        @apply dark:text-gray-500;
     }
 }
 
@@ -35,11 +43,13 @@
     }
     .btn-secondary {
         @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white text-gray-700
-               font-medium rounded-xl border border-gray-300 hover:bg-gray-50 active:scale-95 transition-all duration-150;
+               font-medium rounded-xl border border-gray-300 hover:bg-gray-50 active:scale-95 transition-all duration-150
+               dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700;
     }
     .btn-outline {
         @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-primary-600
-               font-medium rounded-xl border border-primary-300 hover:bg-primary-50 active:scale-95 transition-all duration-150;
+               font-medium rounded-xl border border-primary-300 hover:bg-primary-50 active:scale-95 transition-all duration-150
+               dark:text-primary-400 dark:border-primary-700 dark:hover:bg-primary-950;
     }
     .btn-danger {
         @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white text-sm
@@ -49,32 +59,43 @@
         @apply px-3 py-1.5 text-sm rounded-lg;
     }
     .card {
-        @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
+        @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden
+               dark:bg-gray-900 dark:border-gray-700/60;
     }
     .input {
-        @apply w-full rounded-xl border-gray-300 focus:border-primary-500 focus:ring-primary-500 text-sm;
+        @apply w-full rounded-xl border-gray-300 focus:border-primary-500 focus:ring-primary-500 text-sm
+               dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+               dark:focus:border-primary-500 dark:focus:ring-primary-500;
     }
     .label {
-        @apply block text-sm font-medium text-gray-700 mb-1.5;
+        @apply block text-sm font-medium text-gray-700 mb-1.5 dark:text-gray-300;
     }
     .badge {
         @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
     }
     .sidebar-link {
         @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600
-               hover:bg-primary-50 hover:text-primary-700 transition-colors duration-150;
+               hover:bg-primary-50 hover:text-primary-700 transition-colors duration-150
+               dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-primary-400;
+    }
+    .sidebar-link.active {
+        @apply bg-primary-50 text-primary-700 dark:bg-gray-800 dark:text-primary-400;
     }
     .stat-card {
-        @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 flex items-center gap-4;
+        @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 flex items-center gap-4
+               dark:bg-gray-900 dark:border-gray-700/60;
     }
     .product-card {
-        @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col;
+        @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden
+               hover:shadow-md transition-shadow duration-200 flex flex-col
+               dark:bg-gray-900 dark:border-gray-700/60;
     }
     .nav-link {
-        @apply text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors;
+        @apply text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors
+               dark:text-gray-300 dark:hover:text-primary-400;
     }
     .section-title {
-        @apply text-2xl font-bold text-gray-900;
+        @apply text-2xl font-bold text-gray-900 dark:text-gray-100;
     }
 }
 

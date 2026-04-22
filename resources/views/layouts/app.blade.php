@@ -5,15 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'TABUAN') — Farm Fresh Marketplace</title>
+    <script>
+        (function () {
+            const t = localStorage.getItem('theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="h-full flex flex-col" x-data="{ mobileMenu: false }">
+<body class="h-full flex flex-col dark:bg-gray-950" x-data="{ mobileMenu: false }">
 
 {{-- NAVBAR --}}
-<nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+<nav class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 shadow-sm dark:shadow-gray-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
 
@@ -21,11 +29,10 @@
             <a href="{{ route('home') }}" class="flex items-center gap-2">
                 <div class="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center">
                     <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
-                        <path d="M7 6.5C7 5.12 8.12 4 9.5 4S12 5.12 12 6.5 10.88 9 9.5 9 7 7.88 7 6.5zm5 0C12 5.12 13.12 4 14.5 4S17 5.12 17 6.5 15.88 9 14.5 9 12 7.88 12 6.5z"/>
+                        <path d="M17 8C8 10 5.9 16.17 3.82 21c6.07-3.15 13.26-1.67 16.44-6C22 11 21 3 21 3c-1 2-4 4-4 5z"/>
                     </svg>
                 </div>
-                <span class="text-xl font-bold text-primary-700 tracking-tight">TABUAN</span>
+                <span class="text-xl font-bold text-primary-700 dark:text-primary-400 tracking-tight">TABUAN</span>
             </a>
 
             {{-- Desktop Nav --}}
@@ -56,11 +63,24 @@
             </div>
 
             {{-- Right Actions --}}
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
+
+                {{-- Dark mode toggle --}}
+                <button @click="$store.theme.toggle()"
+                        class="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 transition-colors"
+                        :aria-label="$store.theme.dark ? 'Switch to light mode' : 'Switch to dark mode'">
+                    <svg x-show="!$store.theme.dark" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                    <svg x-show="$store.theme.dark" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                </button>
+
                 @auth
                     {{-- Cart --}}
                     @if(!auth()->user()->isFarmer() && !auth()->user()->isAdmin())
-                        <a href="{{ route('cart.index') }}" class="relative p-2 text-gray-600 hover:text-primary-600 transition-colors">
+                        <a href="{{ route('cart.index') }}" class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
@@ -73,34 +93,34 @@
 
                     {{-- User Menu --}}
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="flex items-center gap-2 p-1 rounded-xl hover:bg-gray-100 transition-colors">
+                        <button @click="open = !open" class="flex items-center gap-2 p-1 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                             <img src="{{ auth()->user()->avatar_url }}" class="w-8 h-8 rounded-lg object-cover" alt="">
-                            <span class="hidden sm:block text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
+                            <span class="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-200">{{ auth()->user()->name }}</span>
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
                         <div x-show="open" @click.outside="open = false" x-transition
-                             class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-lg border border-gray-100 py-2 z-50">
-                            <div class="px-4 py-2 border-b border-gray-100 mb-1">
-                                <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name }}</p>
-                                <p class="text-xs text-gray-500 capitalize">{{ auth()->user()->role }}</p>
+                             class="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 py-2 z-50">
+                            <div class="px-4 py-2 border-b border-gray-100 dark:border-gray-700 mb-1">
+                                <p class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 capitalize">{{ auth()->user()->role }}</p>
                             </div>
                             @if(auth()->user()->isFarmer())
-                                <a href="{{ route('farmer.dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
-                                <a href="{{ route('farmer.products') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Products</a>
-                                <a href="{{ route('farmer.orders') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Orders</a>
+                                <a href="{{ route('farmer.dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Dashboard</a>
+                                <a href="{{ route('farmer.products') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">My Products</a>
+                                <a href="{{ route('farmer.orders') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Orders</a>
                             @elseif(auth()->user()->isAdmin())
-                                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Admin Panel</a>
+                                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Admin Panel</a>
                             @else
-                                <a href="{{ route('buyer.dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
-                                <a href="{{ route('buyer.orders') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Orders</a>
-                                <a href="{{ route('buyer.wishlist') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Wishlist</a>
+                                <a href="{{ route('buyer.dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Dashboard</a>
+                                <a href="{{ route('buyer.orders') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">My Orders</a>
+                                <a href="{{ route('buyer.wishlist') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Wishlist</a>
                             @endif
-                            <div class="border-t border-gray-100 mt-1 pt-1">
+                            <div class="border-t border-gray-100 dark:border-gray-700 mt-1 pt-1">
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    <button type="submit" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40">
                                         Sign Out
                                     </button>
                                 </form>
@@ -113,7 +133,7 @@
                 @endauth
 
                 {{-- Mobile menu btn --}}
-                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-gray-600">
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-gray-600 dark:text-gray-300">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path x-show="!mobileMenu" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                         <path x-show="mobileMenu" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -124,12 +144,12 @@
     </div>
 
     {{-- Mobile Menu --}}
-    <div x-show="mobileMenu" x-transition class="md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-1">
-        <a href="{{ route('home') }}" class="block py-2 text-sm text-gray-700">Home</a>
-        <a href="{{ route('marketplace') }}" class="block py-2 text-sm text-gray-700">Marketplace</a>
-        <a href="{{ route('map') }}" class="block py-2 text-sm text-gray-700">Seller Map</a>
+    <div x-show="mobileMenu" x-transition class="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 space-y-1">
+        <a href="{{ route('home') }}" class="block py-2 text-sm text-gray-700 dark:text-gray-300">Home</a>
+        <a href="{{ route('marketplace') }}" class="block py-2 text-sm text-gray-700 dark:text-gray-300">Marketplace</a>
+        <a href="{{ route('map') }}" class="block py-2 text-sm text-gray-700 dark:text-gray-300">Seller Map</a>
         @auth
-            <a href="{{ route('messages.index') }}" class="block py-2 text-sm text-gray-700">Messages</a>
+            <a href="{{ route('messages.index') }}" class="block py-2 text-sm text-gray-700 dark:text-gray-300">Messages</a>
         @endauth
     </div>
 </nav>
@@ -138,7 +158,7 @@
 @if(session('success'))
     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
          class="fixed top-20 right-4 z-50 flex items-center gap-3 bg-primary-600 text-white px-5 py-3 rounded-xl shadow-lg max-w-sm">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
         </svg>
         <p class="text-sm font-medium">{{ session('success') }}</p>
@@ -147,7 +167,7 @@
 @if(session('error'))
     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
          class="fixed top-20 right-4 z-50 flex items-center gap-3 bg-red-600 text-white px-5 py-3 rounded-xl shadow-lg max-w-sm">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
         </svg>
         <p class="text-sm font-medium">{{ session('error') }}</p>
