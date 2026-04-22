@@ -15,6 +15,7 @@ use App\Policies\ProductPolicy;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+
         Paginator::useTailwind();
 
         // Policies
