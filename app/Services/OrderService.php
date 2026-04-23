@@ -34,8 +34,9 @@ class OrderService
                     }
                 }
 
+                $seller         = User::find($sellerId);
                 $subtotal       = $items->sum(fn($item) => $item->product->price * $item->quantity);
-                $deliveryFee    = $paymentMethod->hasDeliveryFee()
+                $deliveryFee    = ($paymentMethod->hasDeliveryFee() && !($seller?->free_delivery))
                     ? config('marketplace.delivery_fee', 50)
                     : 0;
                 $commissionRate = config('marketplace.commission_rate', 5) / 100;

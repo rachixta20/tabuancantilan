@@ -155,4 +155,12 @@ class FarmerController extends Controller
         $user->update($data);
         return response()->json(['success' => true, 'is_live' => $user->is_live]);
     }
+
+    public function toggleFreeDelivery()
+    {
+        $user = auth()->user();
+        $user->update(['free_delivery' => !$user->free_delivery]);
+        $status = $user->free_delivery ? 'enabled' : 'disabled';
+        return back()->with('success', "Free delivery {$status}.");
+    }
 }

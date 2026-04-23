@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_verified', 'is_active', 'account_status', 'rejection_reason', 'verified_at',
         'id_document', 'selfie_photo', 'farm_document', 'id_type', 'farm_name', 'admin_notes',
         'street', 'purok', 'barangay',
-        'latitude', 'longitude', 'is_live', 'live_title',
+        'latitude', 'longitude', 'is_live', 'live_title', 'free_delivery',
         'password',
     ];
 
@@ -36,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'is_verified'       => 'boolean',
             'is_active'         => 'boolean',
             'is_live'           => 'boolean',
+            'free_delivery'     => 'boolean',
             'latitude'          => 'float',
             'longitude'         => 'float',
             'password'          => 'hashed',

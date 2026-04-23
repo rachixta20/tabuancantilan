@@ -110,6 +110,29 @@
         </div>
     </div>
 
+    {{-- Free Delivery Toggle --}}
+    <div class="card p-5 mt-6">
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <h3 class="font-semibold text-gray-800">🚚 Free Delivery</h3>
+                <p class="text-xs text-gray-500 mt-0.5">
+                    @if(auth()->user()->free_delivery)
+                        <span class="text-primary-600 font-medium">Enabled</span> — buyers won't be charged a delivery fee on your orders.
+                    @else
+                        <span class="text-gray-400">Disabled</span> — standard delivery fee applies to your orders.
+                    @endif
+                </p>
+            </div>
+            <form action="{{ route('farmer.free-delivery.toggle') }}" method="POST">
+                @csrf
+                <button type="submit"
+                        class="{{ auth()->user()->free_delivery ? 'btn-danger' : 'btn-primary' }} text-sm py-2 px-4 shrink-0">
+                    {{ auth()->user()->free_delivery ? 'Disable' : 'Enable Free Delivery' }}
+                </button>
+            </form>
+        </div>
+    </div>
+
     {{-- Store Profile --}}
     <div class="card p-5 mt-6" x-data="{ open: false }">
         <div class="flex items-center justify-between">
