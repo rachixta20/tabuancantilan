@@ -10,58 +10,100 @@
 
             @if(!$hasDocuments)
             {{-- Missing documents — show upload form --}}
-            <div class="card p-8 text-left">
-                <div class="text-center mb-6">
+            <div class="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-left">
+                <div class="text-center mb-7">
                     <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">📋</div>
                     <h1 class="text-2xl font-bold text-gray-900">Complete Your Application</h1>
-                    <p class="text-gray-500 mt-2 text-sm">Upload your verification documents to submit your seller application for review.</p>
+                    <p class="text-gray-500 mt-2 text-sm">Upload your verification documents so our team can review your seller application.</p>
                 </div>
 
                 @if(session('success'))
-                    <div class="mb-4 px-4 py-3 bg-primary-50 border border-primary-200 text-primary-700 rounded-xl text-sm">{{ session('success') }}</div>
+                    <div class="mb-5 px-4 py-3 bg-primary-50 border border-primary-200 text-primary-700 rounded-xl text-sm font-medium">{{ session('success') }}</div>
                 @endif
                 @if(session('error'))
-                    <div class="mb-4 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{{ session('error') }}</div>
+                    <div class="mb-5 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{{ session('error') }}</div>
                 @endif
 
                 <form action="{{ route('farmer.documents.upload') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
 
+                    {{-- ID Type --}}
                     <div>
-                        <label class="label">ID Type</label>
-                        <select name="id_type" class="input">
-                            <option value="">Select ID type</option>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">ID Type</label>
+                        <select name="id_type" class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                            <option value="">Select your ID type</option>
                             @foreach(["PhilSys / National ID","Driver's License","Passport","SSS ID","GSIS ID","Voter's ID","Postal ID","PRC ID","Other"] as $idType)
                                 <option value="{{ $idType }}" {{ old('id_type') === $idType ? 'selected' : '' }}>{{ $idType }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div>
-                        <label class="label">Government ID <span class="text-gray-400 font-normal text-xs">(front, clear photo)</span></label>
-                        <input type="file" name="id_document" accept="image/*,.pdf" class="input py-2 @error('id_document') border-red-400 @enderror">
+                    {{-- Government ID --}}
+                    <div x-data="{ name: '' }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                            Government ID
+                            <span class="text-gray-400 font-normal ml-1">(front side, clearly visible)</span>
+                        </label>
+                        <label for="id_doc_input"
+                               class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-gray-300 rounded-xl p-5 cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-colors @error('id_document') border-red-400 bg-red-50 @enderror">
+                            <span class="text-3xl">🪪</span>
+                            <span class="text-sm font-medium text-gray-600" x-text="name || 'Click to choose file'"></span>
+                            <span class="text-xs text-gray-400">JPG, PNG, PDF up to 4MB</span>
+                            <input type="file" id="id_doc_input" name="id_document" accept="image/*,.pdf" class="hidden"
+                                   @change="name = $event.target.files[0]?.name || ''">
+                        </label>
                         @error('id_document') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div>
-                        <label class="label">Selfie with ID <span class="text-gray-400 font-normal text-xs">(hold your ID next to your face)</span></label>
-                        <input type="file" name="selfie_photo" accept="image/*" class="input py-2 @error('selfie_photo') border-red-400 @enderror">
+                    {{-- Selfie --}}
+                    <div x-data="{ name: '', preview: null }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                            Selfie Holding Your ID
+                            <span class="text-gray-400 font-normal ml-1">(face + ID must both be visible)</span>
+                        </label>
+                        <label for="selfie_input"
+                               class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-amber-300 rounded-xl p-5 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition-colors @error('selfie_photo') border-red-400 bg-red-50 @enderror">
+                            <template x-if="preview">
+                                <img :src="preview" class="h-24 object-contain rounded-lg">
+                            </template>
+                            <template x-if="!preview">
+                                <span class="text-3xl">🤳</span>
+                            </template>
+                            <span class="text-sm font-medium text-gray-600" x-text="name || 'Click to choose photo'"></span>
+                            <span class="text-xs text-gray-400">JPG or PNG up to 4MB</span>
+                            <input type="file" id="selfie_input" name="selfie_photo" accept="image/*" class="hidden"
+                                   @change="name = $event.target.files[0]?.name || ''; preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                        </label>
                         @error('selfie_photo') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div>
-                        <label class="label">Farm / Business Document <span class="text-gray-400 font-normal text-xs">(optional — permit, certificate, etc.)</span></label>
-                        <input type="file" name="farm_document" accept="image/*,.pdf" class="input py-2 @error('farm_document') border-red-400 @enderror">
-                        @error('farm_document') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    {{-- Farm Document --}}
+                    <div x-data="{ name: '' }">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                            Farm / Business Document
+                            <span class="text-gray-400 font-normal ml-1">(optional — permit, certificate, clearance)</span>
+                        </label>
+                        <label for="farm_doc_input"
+                               class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-gray-200 rounded-xl p-5 cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-colors">
+                            <span class="text-3xl">📄</span>
+                            <span class="text-sm font-medium text-gray-600" x-text="name || 'Click to choose file (optional)'"></span>
+                            <span class="text-xs text-gray-400">JPG, PNG, PDF up to 4MB</span>
+                            <input type="file" id="farm_doc_input" name="farm_document" accept="image/*,.pdf" class="hidden"
+                                   @change="name = $event.target.files[0]?.name || ''">
+                        </label>
                     </div>
 
-                    <button type="submit" class="btn-primary w-full py-3">Submit Documents</button>
+                    <button type="submit" class="btn-primary w-full py-3 text-base font-semibold mt-2">
+                        Submit Application Documents
+                    </button>
                 </form>
 
-                <div class="mt-4 flex justify-center">
-                    <form action="{{ route('logout') }}" method="POST">
+                <div class="mt-5 text-center border-t border-gray-100 pt-5">
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf
-                        <button type="submit" class="text-sm text-gray-400 hover:text-gray-600">Sign out — continue later</button>
+                        <button type="submit" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+                            Sign out and continue later →
+                        </button>
                     </form>
                 </div>
             </div>
