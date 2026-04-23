@@ -153,6 +153,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @foreach($product->reviews as $review)
                     <div class="card p-5">
+                        {{-- Buyer review --}}
                         <div class="flex items-start gap-3">
                             <img src="{{ $review->user->avatar_url }}" class="w-10 h-10 rounded-xl object-cover shrink-0" alt="">
                             <div class="flex-1">
@@ -172,6 +173,42 @@
                                 @endif
                             </div>
                         </div>
+
+                        {{-- Seller reply --}}
+                        @if($review->seller_reply)
+                            <div class="mt-3 ml-4 pl-4 border-l-2 border-primary-200 bg-primary-50 rounded-r-xl py-3 pr-3">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <img src="{{ $product->seller->avatar_url }}" class="w-6 h-6 rounded-lg object-cover shrink-0" alt="">
+                                    <span class="text-xs font-semibold text-primary-700">{{ $product->seller->farm_name ?: $product->seller->name }}</span>
+                                    <span class="text-xs text-gray-400">· {{ $review->seller_reply_at->diffForHumans() }}</span>
+                                </div>
+                                <p class="text-sm text-gray-700">{{ $review->seller_reply }}</p>
+                            </div>
+                        @endif
+
+                        {{-- Seller reply form (only visible to the product owner) --}}
+                        @auth
+                            @if(auth()->id() === $product->user_id && !$review->seller_reply)
+                                <div class="mt-3 ml-4" x-data="{ open: false }">
+                                    <button @click="open = !open"
+                                            class="text-xs text-primary-600 hover:text-primary-700 font-medium transition-colors">
+                                        + Reply to this review
+                                    </button>
+                                    <form x-show="open" x-cloak
+                                          action="{{ route('farmer.reviews.reply', $review) }}" method="POST"
+                                          class="mt-2 flex flex-col gap-2">
+                                        @csrf
+                                        <textarea name="reply" rows="2" required maxlength="1000"
+                                                  class="input text-sm resize-none"
+                                                  placeholder="Write your reply..."></textarea>
+                                        <div class="flex gap-2">
+                                            <button type="submit" class="btn-primary text-xs py-1.5 px-4">Post Reply</button>
+                                            <button type="button" @click="open = false" class="btn-outline text-xs py-1.5 px-3">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+                        @endauth
                     </div>
                 @endforeach
             </div>

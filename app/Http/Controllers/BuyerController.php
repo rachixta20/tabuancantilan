@@ -33,7 +33,7 @@ class BuyerController extends Controller
     public function orderDetail(Order $order)
     {
         $this->authorize('view', $order);
-        $order->load(['seller', 'buyer', 'items.product', 'statusHistories.changedBy']);
+        $order->load(['seller', 'buyer', 'items.product.reviews', 'statusHistories.changedBy']);
         return view('buyer.order-detail', compact('order'));
     }
 

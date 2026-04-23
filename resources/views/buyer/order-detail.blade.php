@@ -150,31 +150,58 @@
            class="text-xs text-gray-400 hover:text-red-500 transition-colors">Report an issue with this order</a>
     </div>
 
-    {{-- Review Form --}}
+    {{-- Reviews --}}
     @if($order->status?->value === 'delivered')
         <div class="card p-5">
-            <h3 class="font-semibold text-gray-800 mb-4">Leave a Review</h3>
+            <h3 class="font-semibold text-gray-800 mb-4">Reviews</h3>
             @foreach($order->items as $item)
                 @if($item->product)
-                    <form action="{{ route('buyer.review.store', $order) }}" method="POST"
-                          class="mb-4 p-4 bg-gray-50 rounded-xl"
-                          x-data="{ rating: 5, submitting: false }" @submit="submitting = true">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
-                        <p class="text-sm font-medium text-gray-700 mb-3">{{ $item->product_name }}</p>
-                        <div class="flex gap-1 mb-3">
-                            @for($i = 1; $i <= 5; $i++)
-                                <button type="button" @click="rating = {{ $i }}"
-                                        class="text-2xl transition-transform hover:scale-110"
-                                        :class="{{ $i }} <= rating ? 'text-amber-400' : 'text-gray-300'">★</button>
-                            @endfor
-                            <input type="hidden" name="rating" :value="rating">
+                    @php $existing = $item->product->reviews->where('order_id', $order->id)->where('user_id', auth()->id())->first(); @endphp
+
+                    @if($existing)
+                        {{-- Already reviewed — show it with seller reply --}}
+                        <div class="mb-4 p-4 bg-gray-50 rounded-xl">
+                            <p class="text-sm font-medium text-gray-700 mb-2">{{ $item->product_name }}</p>
+                            <div class="flex gap-0.5 mb-2">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg class="w-4 h-4 {{ $i <= $existing->rating ? 'text-amber-400' : 'text-gray-200' }}" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                @endfor
+                            </div>
+                            @if($existing->comment)
+                                <p class="text-sm text-gray-600 mb-2">{{ $existing->comment }}</p>
+                            @endif
+                            @if($existing->seller_reply)
+                                <div class="mt-2 pl-3 border-l-2 border-primary-200 bg-primary-50 rounded-r-lg py-2 pr-3">
+                                    <p class="text-xs font-semibold text-primary-700 mb-0.5">Seller replied:</p>
+                                    <p class="text-sm text-gray-700">{{ $existing->seller_reply }}</p>
+                                </div>
+                            @endif
+                            <p class="text-xs text-primary-600 mt-2 font-medium">✓ Review submitted</p>
                         </div>
-                        <textarea name="comment" rows="2" class="input resize-none text-sm mb-3 w-full"
-                                  placeholder="Share your experience..."></textarea>
-                        <button type="submit" :disabled="submitting" class="btn-primary text-sm py-2 px-5"
-                                x-text="submitting ? 'Submitting...' : 'Submit Review'"></button>
-                    </form>
+                    @else
+                        {{-- Review form --}}
+                        <form action="{{ route('buyer.review.store', $order) }}" method="POST"
+                              class="mb-4 p-4 bg-gray-50 rounded-xl"
+                              x-data="{ rating: 5, submitting: false }" @submit="submitting = true">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                            <p class="text-sm font-medium text-gray-700 mb-3">{{ $item->product_name }}</p>
+                            <div class="flex gap-1 mb-3">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <button type="button" @click="rating = {{ $i }}"
+                                            class="text-2xl transition-transform hover:scale-110"
+                                            :class="{{ $i }} <= rating ? 'text-amber-400' : 'text-gray-300'">★</button>
+                                @endfor
+                                <input type="hidden" name="rating" :value="rating">
+                            </div>
+                            <textarea name="comment" rows="2" class="input resize-none text-sm mb-3 w-full"
+                                      placeholder="Share your experience..."></textarea>
+                            <button type="submit" :disabled="submitting" class="btn-primary text-sm py-2 px-5"
+                                    x-text="submitting ? 'Submitting...' : 'Submit Review'"></button>
+                        </form>
+                    @endif
                 @endif
             @endforeach
         </div>

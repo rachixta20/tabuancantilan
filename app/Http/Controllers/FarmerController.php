@@ -8,6 +8,7 @@ use App\Http\Requests\Farmer\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -154,6 +155,17 @@ class FarmerController extends Controller
         ]);
         $user->update($data);
         return response()->json(['success' => true, 'is_live' => $user->is_live]);
+    }
+
+    public function replyToReview(Request $request, Review $review)
+    {
+        abort_if($review->product->user_id !== auth()->id(), 403);
+        $request->validate(['reply' => 'required|string|max:1000']);
+        $review->update([
+            'seller_reply'    => $request->reply,
+            'seller_reply_at' => now(),
+        ]);
+        return back()->with('success', 'Reply posted.');
     }
 
     public function toggleFreeDelivery()

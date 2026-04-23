@@ -62,6 +62,7 @@ Route::middleware(['auth', 'role:farmer'])->prefix('farmer')->name('farmer.')->g
     Route::post('/location', [FarmerController::class, 'updateLocation'])->name('location.update');
     Route::post('/live', [FarmerController::class, 'toggleLive'])->name('live.toggle');
     Route::post('/free-delivery', [FarmerController::class, 'toggleFreeDelivery'])->name('free-delivery.toggle');
+    Route::post('/reviews/{review}/reply', [FarmerController::class, 'replyToReview'])->name('reviews.reply');
     Route::get('/products', [FarmerController::class, 'products'])->name('products');
     Route::get('/products/create', [FarmerController::class, 'createProduct'])->name('products.create');
     Route::post('/products', [FarmerController::class, 'storeProduct'])->name('products.store');
