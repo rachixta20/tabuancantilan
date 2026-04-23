@@ -117,7 +117,7 @@
 
             {{-- Seller Card --}}
             <div class="card mt-6 p-4 flex items-center gap-4">
-                <img src="{{ $product->seller->avatar_url }}" class="w-12 h-12 rounded-xl object-cover flex-shrink-0" alt="">
+                <img src="{{ $product->seller->avatar_url }}" class="w-12 h-12 rounded-xl object-cover shrink-0" alt="">
                 <div class="flex-1">
                     <p class="text-xs text-gray-400">Sold by</p>
                     <p class="font-semibold text-gray-800">{{ $product->seller->name }}</p>
@@ -154,7 +154,7 @@
                 @foreach($product->reviews as $review)
                     <div class="card p-5">
                         <div class="flex items-start gap-3">
-                            <img src="{{ $review->user->avatar_url }}" class="w-10 h-10 rounded-xl object-cover flex-shrink-0" alt="">
+                            <img src="{{ $review->user->avatar_url }}" class="w-10 h-10 rounded-xl object-cover shrink-0" alt="">
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
                                     <p class="font-semibold text-sm text-gray-800">{{ $review->user->name }}</p>

@@ -97,7 +97,7 @@
                      data-lng="{{ $seller->longitude }}"
                      data-name="{{ $seller->name }}">
                     <div class="flex items-start gap-3">
-                        <div class="relative flex-shrink-0">
+                        <div class="relative shrink-0">
                             <img src="{{ $seller->avatar_url }}" class="w-12 h-12 rounded-xl object-cover" alt="">
                             @if($seller->is_live)
                                 <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>

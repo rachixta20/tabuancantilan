@@ -29,7 +29,7 @@
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-5 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                                     <img src="{{ $product->image_url }}" class="w-full h-full object-cover"
                                          onerror="this.src='https://placehold.co/40x40/f0fdf4/16a34a?text={{ substr($product->name,0,1) }}'">
                                 </div>

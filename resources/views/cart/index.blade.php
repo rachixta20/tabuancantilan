@@ -19,7 +19,7 @@
                 @foreach($cartItems as $item)
                     <div class="card p-4">
                         <div class="flex items-start gap-3">
-                            <div class="w-16 h-16 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0">
+                            <div class="w-16 h-16 bg-gray-100 rounded-xl overflow-hidden shrink-0">
                                 <img src="{{ $item->product->image_url }}" class="w-full h-full object-cover"
                                      onerror="this.src='https://placehold.co/64x64/f0fdf4/16a34a?text='">
                             </div>
@@ -28,7 +28,7 @@
                                 <p class="text-xs text-gray-400 mt-0.5">{{ $item->product?->seller?->name ?? '—' }}</p>
                                 <p class="text-primary-600 font-bold text-sm mt-1">₱{{ number_format($item->product->price, 2) }}/{{ $item->product->unit }}</p>
                             </div>
-                            <form action="{{ route('cart.remove', $item) }}" method="POST" class="flex-shrink-0">
+                            <form action="{{ route('cart.remove', $item) }}" method="POST" class="shrink-0">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="p-1.5 text-red-400 hover:text-red-600 transition-colors">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

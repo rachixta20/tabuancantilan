@@ -28,7 +28,7 @@
                         <div class="flex items-center justify-between gap-2">
                             <p class="font-semibold text-gray-800 {{ $unread > 0 ? 'text-primary-700' : '' }}">{{ $other->name }}</p>
                             @if($conv->lastMessage)
-                                <span class="text-xs text-gray-400 flex-shrink-0">{{ $conv->lastMessage->created_at->diffForHumans(null, true) }}</span>
+                                <span class="text-xs text-gray-400 shrink-0">{{ $conv->lastMessage->created_at->diffForHumans(null, true) }}</span>
                             @endif
                         </div>
                         @if($conv->product)

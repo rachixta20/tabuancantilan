@@ -48,7 +48,7 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-5 py-4">
                         <div class="flex items-center gap-3">
-                            <img src="{{ $u->avatar_url }}" class="w-9 h-9 rounded-lg object-cover flex-shrink-0" alt="">
+                            <img src="{{ $u->avatar_url }}" class="w-9 h-9 rounded-lg object-cover shrink-0" alt="">
                             <div>
                                 <p class="font-medium text-gray-800 flex items-center gap-1">
                                     {{ $u->name }}

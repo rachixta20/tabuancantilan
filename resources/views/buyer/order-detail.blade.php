@@ -58,7 +58,7 @@
         <div class="space-y-3 mb-5">
             @foreach($order->items as $item)
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0">
+                    <div class="w-12 h-12 bg-gray-100 rounded-xl overflow-hidden shrink-0">
                         @if($item->product)
                             <img src="{{ $item->product->image_url }}" class="w-full h-full object-cover" alt="">
                         @endif
@@ -102,7 +102,7 @@
                             $color = $colorMap[$history->status] ?? 'gray';
                         @endphp
                         <div class="flex items-start gap-4 relative">
-                            <div class="w-7 h-7 rounded-full bg-{{ $color }}-100 border-2 border-{{ $color }}-400 flex items-center justify-center flex-shrink-0 z-10">
+                            <div class="w-7 h-7 rounded-full bg-{{ $color }}-100 border-2 border-{{ $color }}-400 flex items-center justify-center shrink-0 z-10">
                                 <div class="w-2 h-2 rounded-full bg-{{ $color }}-500"></div>
                             </div>
                             <div class="flex-1 pb-1">

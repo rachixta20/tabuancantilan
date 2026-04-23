@@ -61,7 +61,7 @@
                                     <p class="text-xs text-gray-500">Pay when your order arrives</p>
                                 </div>
                                 <div :class="method === 'cod' ? 'border-primary-500 bg-primary-500' : 'border-gray-300'"
-                                     class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0">
+                                     class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0">
                                     <div x-show="method === 'cod'" class="w-2 h-2 bg-white rounded-full"></div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                     <p class="text-xs text-gray-500">Pick up at the store — no delivery fee</p>
                                 </div>
                                 <div :class="method === 'walkin' ? 'border-primary-500 bg-primary-500' : 'border-gray-300'"
-                                     class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0">
+                                     class="ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0">
                                     <div x-show="method === 'walkin'" class="w-2 h-2 bg-white rounded-full"></div>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
             <div class="space-y-3 mb-4">
                 @foreach($cartItems as $item)
                     <div class="flex items-center gap-2 text-sm">
-                        <div class="w-8 h-8 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <div class="w-8 h-8 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                             <img src="{{ $item->product->image_url }}" class="w-full h-full object-cover">
                         </div>
                         <span class="flex-1 text-gray-700 truncate">{{ $item->product->name }}</span>

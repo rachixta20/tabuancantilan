@@ -19,7 +19,7 @@
                     @php $other = $conv->otherUser($user); @endphp
                     <a href="{{ route('messages.show', $conv) }}"
                        class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors {{ $conv->id === $conversation->id ? 'bg-primary-50' : '' }}">
-                        <img src="{{ $other->avatar_url }}" class="w-9 h-9 rounded-lg object-cover flex-shrink-0" alt="">
+                        <img src="{{ $other->avatar_url }}" class="w-9 h-9 rounded-lg object-cover shrink-0" alt="">
                         <div class="min-w-0">
                             <p class="text-sm font-semibold text-gray-800 truncate">{{ $other->name }}</p>
                             @if($conv->lastMessage)
@@ -54,7 +54,7 @@
                     @php $isMine = $message->sender_id === $user->id; @endphp
                     <div class="flex {{ $isMine ? 'justify-end' : 'justify-start' }} gap-2">
                         @if(!$isMine)
-                            <img src="{{ $message->sender->avatar_url }}" class="w-7 h-7 rounded-lg flex-shrink-0 mt-1" alt="">
+                            <img src="{{ $message->sender->avatar_url }}" class="w-7 h-7 rounded-lg shrink-0 mt-1" alt="">
                         @endif
                         <div class="{{ $isMine ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-800' }} max-w-xs lg:max-w-md px-4 py-2.5 rounded-2xl {{ $isMine ? 'rounded-tr-sm' : 'rounded-tl-sm' }}">
                             <p class="text-sm leading-relaxed">{{ $message->body }}</p>
@@ -73,7 +73,7 @@
                     <input type="text" name="body" placeholder="Type a message..." required
                            class="input flex-1 py-2.5" autocomplete="off">
                     <button type="submit"
-                            class="w-10 h-10 bg-primary-600 text-white rounded-xl flex items-center justify-center hover:bg-primary-700 transition-colors flex-shrink-0">
+                            class="w-10 h-10 bg-primary-600 text-white rounded-xl flex items-center justify-center hover:bg-primary-700 transition-colors shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>

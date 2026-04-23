@@ -51,7 +51,7 @@
         <div class="border-t border-gray-100 pt-4 text-sm">
             <p class="text-xs text-gray-400 uppercase tracking-wide mb-2">Reported Product</p>
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                     <img src="{{ $report->reportedProduct->image_url }}" class="w-full h-full object-cover" alt="">
                 </div>
                 <div>
@@ -99,17 +99,17 @@
                 @csrf @method('PATCH')
 
                 <div class="grid grid-cols-3 gap-3">
-                    <label class="flex flex-col items-center gap-2 p-3 border-2 rounded-xl cursor-pointer transition-colors has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 border-gray-200 hover:border-gray-300">
+                    <label class="flex flex-col items-center gap-2 p-3 border-2 rounded-xl cursor-pointer transition-colors has-checked:border-blue-500 has-checked:bg-blue-50 border-gray-200 hover:border-gray-300">
                         <input type="radio" name="action" value="reviewed" class="sr-only" {{ old('action') === 'reviewed' ? 'checked' : '' }}>
                         <span class="text-lg">👁</span>
                         <span class="text-xs font-semibold text-gray-700">Mark Reviewed</span>
                     </label>
-                    <label class="flex flex-col items-center gap-2 p-3 border-2 rounded-xl cursor-pointer transition-colors has-[:checked]:border-green-500 has-[:checked]:bg-green-50 border-gray-200 hover:border-gray-300">
+                    <label class="flex flex-col items-center gap-2 p-3 border-2 rounded-xl cursor-pointer transition-colors has-checked:border-green-500 has-checked:bg-green-50 border-gray-200 hover:border-gray-300">
                         <input type="radio" name="action" value="resolved" class="sr-only" {{ old('action') === 'resolved' ? 'checked' : '' }}>
                         <span class="text-lg">✅</span>
                         <span class="text-xs font-semibold text-gray-700">Resolve</span>
                     </label>
-                    <label class="flex flex-col items-center gap-2 p-3 border-2 rounded-xl cursor-pointer transition-colors has-[:checked]:border-gray-500 has-[:checked]:bg-gray-100 border-gray-200 hover:border-gray-300">
+                    <label class="flex flex-col items-center gap-2 p-3 border-2 rounded-xl cursor-pointer transition-colors has-checked:border-gray-500 has-checked:bg-gray-100 border-gray-200 hover:border-gray-300">
                         <input type="radio" name="action" value="dismissed" class="sr-only" {{ old('action') === 'dismissed' ? 'checked' : '' }}>
                         <span class="text-lg">🚫</span>
                         <span class="text-xs font-semibold text-gray-700">Dismiss</span>

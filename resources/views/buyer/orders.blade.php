@@ -15,7 +15,7 @@
                     <p class="font-mono text-sm font-bold text-gray-800">{{ $order->order_number }}</p>
                     <p class="text-xs text-gray-400 mt-0.5">{{ $order->created_at->format('F d, Y · h:i A') }} · From {{ $order->seller?->name ?? '—' }}</p>
                 </div>
-                <div class="flex items-center gap-3 flex-shrink-0 flex-wrap">
+                <div class="flex items-center gap-3 shrink-0 flex-wrap">
                     <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize text-xs px-3 py-1">
                         {{ $order->status?->value }}
                     </span>
@@ -32,7 +32,7 @@
             <div class="space-y-2 mb-4">
                 @foreach($order->items as $item)
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <div class="w-8 h-8 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                             @if($item->product)
                                 <img src="{{ $item->product->image_url }}" class="w-full h-full object-cover"
                                      onerror="this.src='https://placehold.co/32x32/f0fdf4/16a34a?text='">

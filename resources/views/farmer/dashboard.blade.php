@@ -38,7 +38,7 @@
         @endphp
         @foreach($statItems as $s)
             <div class="stat-card">
-                <div class="w-12 h-12 {{ $s['color'] }} rounded-xl flex items-center justify-center text-xl flex-shrink-0">{{ $s['icon'] }}</div>
+                <div class="w-12 h-12 {{ $s['color'] }} rounded-xl flex items-center justify-center text-xl shrink-0">{{ $s['icon'] }}</div>
                 <div>
                     <p class="text-2xl font-bold text-gray-900">{{ $s['value'] }}</p>
                     <p class="text-sm text-gray-500">{{ $s['label'] }}</p>
@@ -65,7 +65,7 @@
                 @forelse($recentOrders as $order)
                     <div class="px-5 py-4 flex items-center justify-between gap-4">
                         <div class="flex items-center gap-3">
-                            <img src="{{ $order->buyer?->avatar_url ?? '' }}" class="w-9 h-9 rounded-lg object-cover flex-shrink-0" alt="">
+                            <img src="{{ $order->buyer?->avatar_url ?? '' }}" class="w-9 h-9 rounded-lg object-cover shrink-0" alt="">
                             <div>
                                 <p class="text-sm font-semibold text-gray-800">{{ $order->order_number }}</p>
                                 <p class="text-xs text-gray-400">{{ $order->buyer?->name ?? '—' }} · {{ $order->items->count() }} item(s)</p>
@@ -91,7 +91,7 @@
             <div class="divide-y divide-gray-50">
                 @forelse($topProducts as $product)
                     <div class="px-5 py-3.5 flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                             <img src="{{ $product->image_url }}" class="w-full h-full object-cover"
                                  onerror="this.src='https://placehold.co/40x40/f0fdf4/16a34a?text={{ substr($product->name,0,1) }}'">
                         </div>
