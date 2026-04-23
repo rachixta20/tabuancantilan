@@ -30,7 +30,7 @@
                     </td>
                     <td class="px-5 py-4">
                         <div class="flex items-center gap-2">
-                            <img src="{{ $order->buyer->avatar_url }}" class="w-7 h-7 rounded-lg" alt="">
+                            <img src="{{ $order->buyer?->avatar_url ?? '' }}" class="w-7 h-7 rounded-lg" alt="">
                             <span class="text-gray-700">{{ $order->buyer?->name ?? '—' }}</span>
                         </div>
                     </td>
