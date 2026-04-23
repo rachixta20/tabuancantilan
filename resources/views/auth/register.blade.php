@@ -53,7 +53,8 @@
                 {{-- Seller notice --}}
                 <div x-show="role === 'farmer'" x-transition
                      class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
-                    🔍 <strong>Seller Verification Required</strong> — You must submit a valid government ID, a selfie holding your ID, and farm documents. Our team will review your application within 1–2 business days.
+                    🔍 <strong>Seller Verification Required</strong> — You will need to submit a valid government ID and a selfie holding your ID.
+                    <span class="block mt-1 text-amber-700">Documents can be uploaded now or later after you create your account.</span>
                 </div>
 
                 {{-- Basic Info --}}
@@ -151,12 +152,12 @@
                     {{-- ID Document Upload --}}
                     <div x-data="{ preview: null }">
                         <label class="label">
-                            Photo of Valid ID <span class="text-red-500">*</span>
-                            <span class="text-gray-400 font-normal text-xs ml-1">(Front side, clearly visible)</span>
+                            Photo of Valid ID
+                            <span class="text-gray-400 font-normal text-xs ml-1">(Optional — can be submitted later)</span>
                         </label>
                         <div class="border-2 border-dashed border-gray-300 rounded-xl p-5 hover:border-primary-400 transition-colors">
                             <input type="file" name="id_document" accept="image/*" class="hidden" id="id-doc-upload"
-                                   @change="preview = URL.createObjectURL($event.target.files[0])" :required="role === 'farmer'">
+                                   @change="preview = URL.createObjectURL($event.target.files[0])">
                             <template x-if="preview">
                                 <img :src="preview" class="w-full max-h-40 object-contain rounded-lg mb-3 mx-auto">
                             </template>
@@ -178,12 +179,12 @@
                     {{-- Selfie Upload --}}
                     <div x-data="{ preview: null }">
                         <label class="label">
-                            Selfie Holding Your ID <span class="text-red-500">*</span>
-                            <span class="text-gray-400 font-normal text-xs ml-1">(Face + ID must be clearly visible)</span>
+                            Selfie Holding Your ID
+                            <span class="text-gray-400 font-normal text-xs ml-1">(Optional — can be submitted later)</span>
                         </label>
                         <div class="border-2 border-dashed border-amber-300 bg-amber-50 rounded-xl p-5 hover:border-amber-400 transition-colors">
                             <input type="file" name="selfie_photo" accept="image/*" class="hidden" id="selfie-upload"
-                                   @change="preview = URL.createObjectURL($event.target.files[0])" :required="role === 'farmer'">
+                                   @change="preview = URL.createObjectURL($event.target.files[0])">
                             <template x-if="preview">
                                 <img :src="preview" class="w-full max-h-40 object-contain rounded-lg mb-3 mx-auto">
                             </template>

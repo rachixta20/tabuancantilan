@@ -178,6 +178,39 @@ class FarmerController extends Controller
         return response()->json(['success' => true, 'is_live' => $user->is_live]);
     }
 
+    public function uploadDocuments(Request $request)
+    {
+        $request->validate([
+            'id_type'       => 'nullable|string|max:100',
+            'id_document'   => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:4096',
+            'selfie_photo'  => 'nullable|file|mimes:jpg,jpeg,png,webp|max:4096',
+            'farm_document' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:4096',
+        ]);
+
+        $user = auth()->user();
+        $data = [];
+
+        if ($request->filled('id_type')) {
+            $data['id_type'] = $request->id_type;
+        }
+        if ($request->hasFile('id_document')) {
+            $data['id_document'] = $request->file('id_document')->store('verifications/ids', 'public');
+        }
+        if ($request->hasFile('selfie_photo')) {
+            $data['selfie_photo'] = $request->file('selfie_photo')->store('verifications/selfies', 'public');
+        }
+        if ($request->hasFile('farm_document')) {
+            $data['farm_document'] = $request->file('farm_document')->store('verifications/farms', 'public');
+        }
+
+        if (empty($data)) {
+            return back()->with('error', 'Please upload at least one document.');
+        }
+
+        $user->update($data);
+        return back()->with('success', 'Documents submitted! Our team will review your application.');
+    }
+
     public function replyToReview(Request $request, Review $review)
     {
         abort_if($review->product->user_id !== auth()->id(), 403);

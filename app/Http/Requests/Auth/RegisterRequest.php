@@ -22,11 +22,11 @@ class RegisterRequest extends FormRequest
 
         if ($this->input('role') === 'farmer') {
             $rules['farm_name']     = ['required', 'string', 'max:255'];
-            $rules['id_type']       = ['required', 'string', 'max:100'];
-            $rules['id_document']   = ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'];
-            $rules['selfie_photo']  = ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'];
-            $rules['farm_document'] = ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'];
-            $rules['barangay']      = ['required', 'string', 'max:100'];
+            $rules['id_type']       = ['nullable', 'string', 'max:100'];
+            $rules['id_document']   = ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:4096'];
+            $rules['selfie_photo']  = ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'];
+            $rules['farm_document'] = ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:4096'];
+            $rules['barangay']      = ['nullable', 'string', 'max:100'];
             $rules['purok']         = ['nullable', 'string', 'max:50'];
             $rules['street']        = ['nullable', 'string', 'max:255'];
             $rules['latitude']      = ['nullable', 'numeric', 'between:-90,90'];
