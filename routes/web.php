@@ -8,6 +8,7 @@ use App\Http\Controllers\FarmerController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\VerifierController;
 use Illuminate\Support\Facades\Route;
 
 // Public
@@ -84,6 +85,13 @@ Route::middleware('auth')->prefix('messages')->name('messages.')->group(function
     Route::post('/{conversation}/send', [MessageController::class, 'send'])->name('send');
 });
 
+// Verifier
+Route::middleware(['auth', 'role:verifier'])->prefix('verifier')->name('verifier.')->group(function () {
+    Route::get('/dashboard', [VerifierController::class, 'dashboard'])->name('dashboard');
+    Route::patch('/users/{user}/approve', [VerifierController::class, 'approve'])->name('users.approve');
+    Route::post('/users/{user}/reject', [VerifierController::class, 'reject'])->name('users.reject');
+});
+
 // Admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -102,6 +110,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::get('/audit-log', [AdminController::class, 'auditLog'])->name('audit-log');
+    Route::get('/verifiers', [AdminController::class, 'verifiers'])->name('verifiers');
+    Route::post('/verifiers', [AdminController::class, 'storeVerifier'])->name('verifiers.store');
+    Route::delete('/verifiers/{user}', [AdminController::class, 'deleteVerifier'])->name('verifiers.delete');
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');

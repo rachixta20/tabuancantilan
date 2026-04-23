@@ -192,6 +192,43 @@ class AdminController extends Controller
         return view('admin.report-detail', compact('report'));
     }
 
+    public function verifiers()
+    {
+        $verifiers = User::where('role', 'verifier')->latest()->get();
+        return view('admin.verifiers', compact('verifiers'));
+    }
+
+    public function storeVerifier(Request $request)
+    {
+        $data = $request->validate([
+            'name'                  => 'required|string|max:255',
+            'email'                 => 'required|email|max:255|unique:users,email',
+            'password'              => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required',
+        ]);
+
+        $user = User::create([
+            'name'           => $data['name'],
+            'email'          => $data['email'],
+            'password'       => $data['password'],
+            'role'           => 'verifier',
+            'account_status' => 'approved',
+            'is_verified'    => true,
+            'is_active'      => true,
+        ]);
+
+        AdminAuditLog::record('create_verifier', $user, [], ['role' => 'verifier']);
+        return back()->with('success', "Verifier account for {$user->name} created successfully.");
+    }
+
+    public function deleteVerifier(User $user)
+    {
+        abort_if($user->role !== 'verifier', 403);
+        AdminAuditLog::record('delete_verifier', $user, ['role' => 'verifier'], []);
+        $user->delete();
+        return back()->with('success', "{$user->name}'s verifier account has been removed.");
+    }
+
     public function settings()
     {
         return view('admin.settings', [

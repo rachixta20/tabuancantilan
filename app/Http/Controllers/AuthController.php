@@ -114,9 +114,10 @@ class AuthController extends Controller
     private function redirectTo(User $user): string
     {
         return match($user->role) {
-            'admin'  => '/admin/dashboard',
-            'farmer' => '/farmer/dashboard',
-            default  => '/marketplace',
+            'admin'    => '/admin/dashboard',
+            'farmer'   => '/farmer/dashboard',
+            'verifier' => '/verifier/dashboard',
+            default    => '/marketplace',
         };
     }
 }

@@ -53,9 +53,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->isFarmer() && $this->isApproved() && $this->is_active;
     }
 
-    public function isFarmer(): bool { return $this->role === 'farmer'; }
-    public function isBuyer(): bool  { return $this->role === 'buyer'; }
-    public function isAdmin(): bool  { return $this->role === 'admin'; }
+    public function isFarmer(): bool   { return $this->role === 'farmer'; }
+    public function isBuyer(): bool    { return $this->role === 'buyer'; }
+    public function isAdmin(): bool    { return $this->role === 'admin'; }
+    public function isVerifier(): bool { return $this->role === 'verifier'; }
 
     public function products() { return $this->hasMany(Product::class); }
     public function ordersAsBuyer() { return $this->hasMany(Order::class, 'buyer_id'); }
