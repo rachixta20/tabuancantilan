@@ -1,5 +1,5 @@
 
-# ── Stage 1: Build frontend assets (Node.js 20, Debian-based = no musl issues) ─
+# ── Stage 1: Build frontend assets ──────────────────────────────────────────
 FROM node:20-slim AS frontend
 
 WORKDIR /app
@@ -12,19 +12,20 @@ COPY resources/ resources/
 
 RUN npm run build
 
-# ── Stage 2: PHP application ──────────────────────────────────────────────────
-FROM php:8.2-cli-alpine
+# ── Stage 2: PHP application ─────────────────────────────────────────────────
+FROM php:8.2-cli
 
-RUN apk add --no-cache \
-    git curl zip unzip bash \
-    oniguruma-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git curl zip unzip \
+    libonig-dev \
     libpng-dev \
-    freetype-dev \
-    libjpeg-turbo-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
     libxml2-dev \
     libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -35,7 +36,6 @@ RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction
 
 COPY . .
 
-# Always use the freshly compiled assets from the build stage (never stale)
 COPY --from=frontend /app/public/build/ ./public/build/
 
 RUN composer dump-autoload --optimize --no-interaction
