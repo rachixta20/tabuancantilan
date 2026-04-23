@@ -418,8 +418,12 @@ async function getDirections(destLat, destLng, mode, btn) {
         document.getElementById('route-summary').textContent   = `Estimated travel time: ${timeText}`;
 
     } catch (err) {
-        document.getElementById('route-dest-name').textContent = 'Error';
-        document.getElementById('route-summary').textContent   = String(err);
+        // OSRM failed — fall back to Google Maps
+        const gmMode = mode === 'walk' ? 'walking' : 'driving';
+        const gmUrl  = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${destLat},${destLng}&travelmode=${gmMode}`;
+        document.getElementById('route-dest-name').textContent = 'Routing unavailable';
+        document.getElementById('route-summary').innerHTML     =
+            `<a href="${gmUrl}" target="_blank" style="color:#3b82f6;font-weight:600;text-decoration:underline;">Open in Google Maps →</a>`;
     }
 }
 
