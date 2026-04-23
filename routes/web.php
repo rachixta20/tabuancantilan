@@ -102,6 +102,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::get('/audit-log', [AdminController::class, 'auditLog'])->name('audit-log');
+    Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+    Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
     Route::get('/reports/{report}', [AdminController::class, 'viewReport'])->name('reports.view');
     Route::patch('/reports/{report}/resolve', [AdminController::class, 'resolveReport'])->name('reports.resolve');

@@ -37,6 +37,20 @@ class AppServiceProvider extends ServiceProvider
             return $enum->value;
         });
 
+        // Load admin-configured settings into config
+        try {
+            $settings = \App\Models\Setting::all()->pluck('value', 'key');
+            if ($settings->isNotEmpty()) {
+                config([
+                    'marketplace.commission_rate' => $settings->get('commission_rate', config('marketplace.commission_rate')),
+                    'marketplace.delivery_fee'    => $settings->get('delivery_fee', config('marketplace.delivery_fee')),
+                    'marketplace.location'        => $settings->get('location', config('marketplace.location')),
+                ]);
+            }
+        } catch (\Exception $e) {
+            // settings table may not exist during migrations
+        }
+
         // Policies
         Gate::policy(Cart::class, CartPolicy::class);
         Gate::policy(Order::class, OrderPolicy::class);

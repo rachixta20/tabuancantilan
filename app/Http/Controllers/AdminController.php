@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ReportStatus;
 use App\Models\AdminAuditLog;
+use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -189,6 +190,32 @@ class AdminController extends Controller
     {
         $report->load(['reporter', 'reportedUser', 'reportedProduct', 'order', 'resolver']);
         return view('admin.report-detail', compact('report'));
+    }
+
+    public function settings()
+    {
+        return view('admin.settings', [
+            'commission_rate' => Setting::get('commission_rate', config('marketplace.commission_rate')),
+            'delivery_fee'    => Setting::get('delivery_fee', config('marketplace.delivery_fee')),
+            'location'        => Setting::get('location', config('marketplace.location')),
+            'city'            => Setting::get('city', config('marketplace.city')),
+        ]);
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $data = $request->validate([
+            'commission_rate' => 'required|numeric|min:0|max:100',
+            'delivery_fee'    => 'required|numeric|min:0',
+            'location'        => 'required|string|max:100',
+            'city'            => 'required|string|max:150',
+        ]);
+
+        foreach ($data as $key => $value) {
+            Setting::set($key, $value);
+        }
+
+        return back()->with('success', 'Settings saved successfully.');
     }
 
     public function resolveReport(Request $request, Report $report)
