@@ -1,6 +1,6 @@
-Role		Email			Password
-Admin		admin@tabuan.com	password
-Farmer/Seller 1	juan@tabuan.com		password
-Farmer/Seller 2	maria@tabuan.com	password
-Farmer/Seller 3	pedro@tabuan.com	password
-Buyer		buyer@tabuan.com	password
+Role		        Email			    Password
+Admin		        admin@tabuan.com	password
+Farmer/Seller 1	    juan@tabuan.com		password
+Farmer/Seller 2	    maria@tabuan.com	password
+Farmer/Seller 3	    pedro@tabuan.com	password
+Buyer		        buyer@tabuan.com	password

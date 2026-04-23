@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Enums\OrderStatus;
 use App\Http\Requests\Farmer\StoreProductRequest;
 use App\Http\Requests\Farmer\UpdateProductRequest;
+use App\Mail\DeliveryOtpMail;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Review;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FarmerController extends Controller
 {
@@ -28,7 +30,8 @@ class FarmerController extends Controller
         $stats = [
             'products'        => $user->products()->count(),
             'orders'          => $user->ordersAsSeller()->count(),
-            'earnings'        => $deliveredOrders->sum('seller_payout'),
+            'earnings'        => $deliveredOrders->where('payout_status', 'released')->sum('seller_payout'),
+            'held_earnings'   => $deliveredOrders->where('payout_status', 'held')->sum('seller_payout'),
             'commission_paid' => $deliveredOrders->sum('platform_fee'),
             'pending'         => $user->ordersAsSeller()->where('status', 'pending')->count(),
         ];
@@ -114,13 +117,27 @@ class FarmerController extends Controller
         $newStatus = OrderStatus::from($request->status);
 
         if ($newStatus === OrderStatus::Delivered) {
-            return back()->with('error', 'Only the buyer can confirm delivery.');
+            return back()->with('error', 'Only the buyer can confirm delivery via OTP.');
         }
 
         try {
             $this->orderService->transition($order, $newStatus, auth()->user(), $request->notes);
         } catch (\RuntimeException $e) {
             return back()->with('error', $e->getMessage());
+        }
+
+        // Generate OTP when order is shipped
+        if ($newStatus === OrderStatus::Shipped) {
+            $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $order->update([
+                'delivery_otp'            => $otp,
+                'delivery_otp_expires_at' => now()->addHours(72),
+            ]);
+            try {
+                Mail::to($order->buyer->email)->send(new DeliveryOtpMail($order->fresh()));
+            } catch (\Exception $e) {
+                // Mail failure must not block the status update
+            }
         }
 
         return back()->with('success', 'Order status updated.');

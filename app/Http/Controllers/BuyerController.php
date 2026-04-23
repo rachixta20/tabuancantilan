@@ -65,17 +65,58 @@ class BuyerController extends Controller
         return back()->with('success', 'Order cancelled successfully.');
     }
 
-    public function confirmReceipt(Order $order)
+    public function confirmReceipt(Request $request, Order $order)
     {
         $this->authorize('confirmReceipt', $order);
-        $order->update(['status' => OrderStatus::Delivered->value, 'delivered_at' => now()]);
+
+        $request->validate(['otp' => 'required|string|size:6']);
+
+        if ($order->delivery_otp !== $request->otp) {
+            return back()->withErrors(['otp' => 'Incorrect code. Please try again.'])->withInput();
+        }
+
+        if ($order->delivery_otp_expires_at && now()->isAfter($order->delivery_otp_expires_at)) {
+            return back()->withErrors(['otp' => 'This code has expired. Ask the seller to resend.'])->withInput();
+        }
+
+        $order->update([
+            'status'                  => OrderStatus::Delivered->value,
+            'delivered_at'            => now(),
+            'delivery_otp'            => null,
+            'delivery_otp_expires_at' => null,
+            'payout_status'           => 'held',
+            'payout_due_at'           => now()->addHours(48),
+        ]);
+
         OrderStatusHistory::create([
             'order_id'   => $order->id,
             'status'     => OrderStatus::Delivered->value,
-            'notes'      => 'Buyer confirmed receipt.',
+            'notes'      => 'Buyer confirmed receipt via OTP.',
             'changed_by' => auth()->id(),
         ]);
-        return back()->with('success', 'Order marked as received. You can now leave a review!');
+
+        return back()->with('success', 'Order received! You can now leave a review. You have 48 hours to raise a dispute if there is an issue.');
+    }
+
+    public function disputeOrder(Request $request, Order $order)
+    {
+        abort_if(auth()->id() !== $order->buyer_id, 403);
+        abort_if(!$order->canDispute(), 403, 'Dispute window has closed.');
+
+        $request->validate(['reason' => 'required|string|max:1000']);
+
+        $order->update(['payout_status' => 'disputed']);
+
+        \App\Models\Report::create([
+            'reporter_id'        => auth()->id(),
+            'reported_user_id'   => $order->seller_id,
+            'order_id'           => $order->id,
+            'type'               => 'non_delivery',
+            'description'        => $request->reason,
+            'status'             => 'pending',
+        ]);
+
+        return back()->with('success', 'Dispute raised. Our team will review your case.');
     }
 
     public function storeReview(Request $request, Order $order)

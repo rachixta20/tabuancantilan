@@ -119,35 +119,74 @@
         </div>
     @endif
 
-    {{-- Confirm Receipt --}}
+    {{-- OTP Confirm Receipt --}}
     @if($order->status?->value === 'shipped')
-        <div class="card p-5 mb-5 border-primary-200 bg-primary-50" x-data="{ confirm: false }">
-            <div class="flex items-center gap-3 mb-3">
+        <div class="card p-5 mb-5 border-primary-200 bg-primary-50">
+            <div class="flex items-center gap-3 mb-4">
                 <div class="w-9 h-9 bg-primary-100 rounded-xl flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-gray-800">Did you receive your order?</h3>
-                    <p class="text-xs text-gray-500">Confirm receipt to complete the order and unlock reviews.</p>
+                    <h3 class="font-semibold text-gray-800">Confirm Delivery</h3>
+                    <p class="text-xs text-gray-500">Enter the 6-digit code sent to your email to confirm you received the order.</p>
                 </div>
             </div>
-            <template x-if="!confirm">
-                <button @click="confirm = true" class="btn-primary text-sm py-2 px-5">
-                    Yes, I Received My Order
-                </button>
-            </template>
-            <template x-if="confirm">
-                <div class="bg-white border border-primary-200 rounded-xl p-4">
-                    <p class="text-sm font-medium text-gray-700 mb-3">Confirm that you received this order?</p>
-                    <div class="flex gap-2">
-                        <form action="{{ route('buyer.orders.confirm-receipt', $order) }}" method="POST">
-                            @csrf @method('PATCH')
-                            <button type="submit" class="btn-primary text-sm py-2 px-4">Confirm Receipt</button>
-                        </form>
-                        <button @click="confirm = false" class="btn-secondary text-sm py-2 px-4">Not Yet</button>
-                    </div>
+
+            @error('otp')
+                <div class="mb-3 px-3 py-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">{{ $message }}</div>
+            @enderror
+
+            <form action="{{ route('buyer.orders.confirm-receipt', $order) }}" method="POST" class="flex flex-col gap-3">
+                @csrf @method('PATCH')
+                <div>
+                    <label class="label text-xs">Delivery Confirmation Code</label>
+                    <input type="text" name="otp" maxlength="6" pattern="\d{6}"
+                           class="input w-40 text-center font-mono text-xl tracking-widest @error('otp') border-red-400 @enderror"
+                           placeholder="000000" autocomplete="one-time-code" value="{{ old('otp') }}">
+                    <p class="text-xs text-gray-400 mt-1">Check your email for the code sent when the order was shipped.</p>
                 </div>
-            </template>
+                <button type="submit" class="btn-primary text-sm py-2 px-5 w-fit">Confirm Receipt</button>
+            </form>
+        </div>
+    @endif
+
+    {{-- Dispute Window --}}
+    @if($order->canDispute())
+        <div class="card p-5 mb-5 border-amber-200 bg-amber-50" x-data="{ open: false }">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <h3 class="font-semibold text-gray-800">Issue with your order?</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                        You have <strong class="text-amber-700">{{ $order->payoutHoursRemaining() }} hours</strong> left to raise a dispute.
+                        After this window, the seller's payout will be released.
+                    </p>
+                </div>
+                <button @click="open = !open" class="shrink-0 text-xs text-amber-700 font-semibold border border-amber-300 bg-white hover:bg-amber-50 px-3 py-1.5 rounded-lg transition-colors">
+                    Raise Dispute
+                </button>
+            </div>
+            <div x-show="open" x-cloak class="mt-4 pt-4 border-t border-amber-200">
+                <form action="{{ route('buyer.orders.dispute', $order) }}" method="POST" class="flex flex-col gap-3">
+                    @csrf
+                    <div>
+                        <label class="label text-xs">Describe the issue</label>
+                        <textarea name="reason" rows="3" required maxlength="1000"
+                                  class="input resize-none text-sm w-full"
+                                  placeholder="e.g. Item received was different from what was ordered. Product was damaged..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary bg-amber-600 hover:bg-amber-700 text-sm py-2 px-5 w-fit">Submit Dispute</button>
+                </form>
+            </div>
+        </div>
+    @elseif($order->status?->value === 'delivered' && $order->payout_status === 'disputed')
+        <div class="card p-4 mb-5 border-red-200 bg-red-50">
+            <p class="text-sm font-semibold text-red-700">⚠ Dispute in progress</p>
+            <p class="text-xs text-red-500 mt-0.5">Our team is reviewing your case. We'll get back to you soon.</p>
+        </div>
+    @elseif($order->status?->value === 'delivered' && $order->payout_status === 'released')
+        <div class="card p-4 mb-5 border-primary-200 bg-primary-50">
+            <p class="text-sm font-semibold text-primary-700">✓ Order completed</p>
+            <p class="text-xs text-primary-500 mt-0.5">The dispute window has closed and the seller has been paid.</p>
         </div>
     @endif
 

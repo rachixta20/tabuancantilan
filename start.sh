@@ -35,5 +35,9 @@ php artisan route:cache
 # NOTE: intentionally no view:cache — views compile on first request from
 # current source files, avoiding any persistent-volume stale-cache issue.
 
+# Run scheduler every minute in background
+echo "Starting scheduler..."
+while true; do php artisan schedule:run --quiet 2>/dev/null; sleep 60; done &
+
 echo "Starting server on port ${PORT:-8000}..."
 php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"
