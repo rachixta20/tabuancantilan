@@ -12,7 +12,9 @@ use App\Models\Product;
 use App\Policies\CartPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\ProductPolicy;
+use BackedEnum;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
@@ -29,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Paginator::useTailwind();
+
+        // Make BackedEnum auto-convert to its value when echoed in {{ }}
+        Blade::stringable(function (BackedEnum $enum) {
+            return $enum->value;
+        });
 
         // Policies
         Gate::policy(Cart::class, CartPolicy::class);
