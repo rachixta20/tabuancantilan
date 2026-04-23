@@ -25,8 +25,8 @@
             @forelse($orders as $order)
                 <tr class="hover:bg-gray-50">
                     <td class="px-5 py-4 font-mono text-xs text-gray-700">{{ $order->order_number }}</td>
-                    <td class="px-5 py-4 text-gray-600">{{ $order->buyer->name }}</td>
-                    <td class="px-5 py-4 text-gray-600">{{ $order->seller->name }}</td>
+                    <td class="px-5 py-4 text-gray-600">{{ $order->buyer?->name ?? '—' }}</td>
+                    <td class="px-5 py-4 text-gray-600">{{ $order->seller?->name ?? '—' }}</td>
                     <td class="px-5 py-4 font-bold text-gray-900">₱{{ number_format($order->total,2) }}</td>
                     <td class="px-5 py-4 uppercase text-xs text-gray-500">{{ $order->payment_method?->value }}</td>
                     <td class="px-5 py-4">

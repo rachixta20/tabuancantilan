@@ -59,10 +59,10 @@
             @forelse($recentOrders as $order)
                 <div class="px-5 py-4 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <img src="{{ $order->seller->avatar_url }}" class="w-9 h-9 rounded-lg object-cover flex-shrink-0" alt="">
+                        <img src="{{ $order->seller?->avatar_url ?? '' }}" class="w-9 h-9 rounded-lg object-cover flex-shrink-0" alt="">
                         <div>
                             <p class="text-sm font-semibold text-gray-800">{{ $order->order_number }}</p>
-                            <p class="text-xs text-gray-400">From {{ $order->seller->name }} · {{ $order->items->count() }} item(s)</p>
+                            <p class="text-xs text-gray-400">From {{ $order->seller?->name ?? '—' }} · {{ $order->items->count() }} item(s)</p>
                         </div>
                     </div>
                     <div class="text-right flex-shrink-0">

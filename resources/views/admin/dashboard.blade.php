@@ -142,7 +142,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-semibold text-gray-800 truncate">{{ $product->name }}</p>
-                            <p class="text-xs text-gray-400">{{ $product->seller->name }} · ₱{{ number_format($product->price,2) }}</p>
+                            <p class="text-xs text-gray-400">{{ $product->seller?->name ?? '—' }} · ₱{{ number_format($product->price,2) }}</p>
                         </div>
                         <div class="flex gap-2">
                             <form action="{{ route('admin.products.approve', $product) }}" method="POST">

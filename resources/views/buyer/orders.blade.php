@@ -13,7 +13,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
                     <p class="font-mono text-sm font-bold text-gray-800">{{ $order->order_number }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">{{ $order->created_at->format('F d, Y · h:i A') }} · From {{ $order->seller->name }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">{{ $order->created_at->format('F d, Y · h:i A') }} · From {{ $order->seller?->name ?? '—' }}</p>
                 </div>
                 <div class="flex items-center gap-3 flex-shrink-0 flex-wrap">
                     <span class="badge bg-{{ $order->status_color }}-100 text-{{ $order->status_color }}-700 capitalize text-xs px-3 py-1">

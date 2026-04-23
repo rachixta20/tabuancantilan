@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-5 py-4 text-gray-500">{{ $product->category->name }}</td>
+                        <td class="px-5 py-4 text-gray-500">{{ $product->category?->name ?? '—' }}</td>
                         <td class="px-5 py-4 font-semibold text-gray-800">₱{{ number_format($product->price, 2) }}/{{ $product->unit }}</td>
                         <td class="px-5 py-4">
                             <span class="{{ $product->stock < 10 ? 'text-red-600 font-semibold' : 'text-gray-600' }}">

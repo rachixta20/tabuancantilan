@@ -28,7 +28,7 @@
                 <p class="text-gray-400 text-xs mb-1">Seller</p>
                 <div class="flex items-center gap-2">
                     <img src="{{ $order->seller->avatar_url }}" class="w-6 h-6 rounded-lg" alt="">
-                    <p class="font-semibold text-gray-800">{{ $order->seller->name }}</p>
+                    <p class="font-semibold text-gray-800">{{ $order->seller?->name ?? '—' }}</p>
                 </div>
             </div>
             <div class="bg-gray-50 rounded-xl p-3">

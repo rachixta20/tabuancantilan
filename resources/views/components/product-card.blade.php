@@ -18,7 +18,7 @@
                 {{ $product->name }}
             </a>
         </div>
-        <p class="text-xs text-gray-400 mb-2">{{ $product->category->name }}</p>
+        <p class="text-xs text-gray-400 mb-2">{{ $product->category?->name ?? '—' }}</p>
         @if($product->avg_rating > 0)
             <div class="flex items-center gap-1 mb-2">
                 @for($i = 1; $i <= 5; $i++)
@@ -60,8 +60,8 @@
             @endauth
         </div>
         <div class="flex items-center gap-1.5 mt-2">
-            <img src="{{ $product->seller->avatar_url }}" class="w-4 h-4 rounded-full" alt="">
-            <span class="text-xs text-gray-400 truncate">{{ $product->seller->name }}</span>
+            <img src="{{ $product->seller?->avatar_url ?? '' }}" class="w-4 h-4 rounded-full" alt="">
+            <span class="text-xs text-gray-400 truncate">{{ $product->seller?->name ?? '—' }}</span>
             @if($product->location)
                 <span class="text-gray-300">·</span>
                 <span class="text-xs text-gray-400 truncate">{{ $product->location }}</span>

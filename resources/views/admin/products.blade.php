@@ -38,11 +38,11 @@
                             </div>
                             <div>
                                 <p class="font-medium text-gray-800">{{ $product->name }}</p>
-                                <p class="text-xs text-gray-400">{{ $product->category->name }}</p>
+                                <p class="text-xs text-gray-400">{{ $product->category?->name ?? '—' }}</p>
                             </div>
                         </div>
                     </td>
-                    <td class="px-5 py-4 text-gray-600">{{ $product->seller->name }}</td>
+                    <td class="px-5 py-4 text-gray-600">{{ $product->seller?->name ?? '—' }}</td>
                     <td class="px-5 py-4 font-semibold text-gray-800">₱{{ number_format($product->price,2) }}</td>
                     <td class="px-5 py-4">
                         @php

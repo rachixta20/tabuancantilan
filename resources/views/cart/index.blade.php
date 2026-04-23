@@ -25,7 +25,7 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="font-semibold text-gray-800 leading-tight">{{ $item->product->name }}</p>
-                                <p class="text-xs text-gray-400 mt-0.5">{{ $item->product->seller->name }}</p>
+                                <p class="text-xs text-gray-400 mt-0.5">{{ $item->product?->seller?->name ?? '—' }}</p>
                                 <p class="text-primary-600 font-bold text-sm mt-1">₱{{ number_format($item->product->price, 2) }}/{{ $item->product->unit }}</p>
                             </div>
                             <form action="{{ route('cart.remove', $item) }}" method="POST" class="flex-shrink-0">
