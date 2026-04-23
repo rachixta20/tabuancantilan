@@ -45,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
                     'marketplace.commission_rate' => $settings->get('commission_rate', config('marketplace.commission_rate')),
                     'marketplace.delivery_fee'    => $settings->get('delivery_fee', config('marketplace.delivery_fee')),
                     'marketplace.location'        => $settings->get('location', config('marketplace.location')),
+                    'marketplace.city'            => $settings->get('city', config('marketplace.city')),
                 ]);
             }
         } catch (\Exception $e) {
