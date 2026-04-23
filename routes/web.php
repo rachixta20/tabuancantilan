@@ -52,6 +52,7 @@ Route::middleware('auth')->prefix('buyer')->name('buyer.')->group(function () {
     Route::get('/wishlist', [BuyerController::class, 'wishlist'])->name('wishlist');
     Route::post('/wishlist/{product}', [BuyerController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::patch('/orders/{order}/cancel', [BuyerController::class, 'cancelOrder'])->name('orders.cancel');
+    Route::patch('/orders/{order}/confirm-receipt', [BuyerController::class, 'confirmReceipt'])->name('orders.confirm-receipt');
     Route::post('/orders/{order}/review', [BuyerController::class, 'storeReview'])->name('review.store');
 });
 

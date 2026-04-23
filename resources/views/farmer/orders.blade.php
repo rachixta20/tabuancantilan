@@ -45,12 +45,12 @@
                         </span>
                     </td>
                     <td class="px-5 py-4">
-                        @if(!in_array($order->status?->value, ['delivered', 'cancelled']))
+                        @if(!in_array($order->status?->value, ['shipped', 'delivered', 'cancelled']))
                             <form action="{{ route('farmer.orders.status', $order) }}" method="POST" class="flex gap-2">
                                 @csrf @method('PATCH')
                                 <select name="status" class="input text-xs py-1.5 pr-6 w-auto">
                                     @php
-                                        $nexts = ['pending'=>['confirmed','cancelled'],'confirmed'=>['processing','cancelled'],'processing'=>['shipped'],'shipped'=>['delivered']];
+                                        $nexts = ['pending'=>['confirmed','cancelled'],'confirmed'=>['processing','cancelled'],'processing'=>['shipped']];
                                     @endphp
                                     @foreach($nexts[$order->status?->value] ?? [] as $next)
                                         <option value="{{ $next }}" class="capitalize">{{ ucfirst($next) }}</option>
@@ -58,6 +58,8 @@
                                 </select>
                                 <button type="submit" class="btn-primary btn-sm text-xs py-1.5 px-3">Update</button>
                             </form>
+                        @elseif($order->status?->value === 'shipped')
+                            <span class="text-xs text-amber-600 font-medium">Waiting for buyer to confirm receipt</span>
                         @else
                             <span class="text-xs text-gray-400 italic">—</span>
                         @endif

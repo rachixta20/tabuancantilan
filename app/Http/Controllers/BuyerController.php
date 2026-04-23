@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\Wishlist;
@@ -61,6 +63,19 @@ class BuyerController extends Controller
         $this->authorize('cancel', $order);
         $order->update(['status' => 'cancelled']);
         return back()->with('success', 'Order cancelled successfully.');
+    }
+
+    public function confirmReceipt(Order $order)
+    {
+        $this->authorize('confirmReceipt', $order);
+        $order->update(['status' => OrderStatus::Delivered->value, 'delivered_at' => now()]);
+        OrderStatusHistory::create([
+            'order_id'   => $order->id,
+            'status'     => OrderStatus::Delivered->value,
+            'notes'      => 'Buyer confirmed receipt.',
+            'changed_by' => auth()->id(),
+        ]);
+        return back()->with('success', 'Order marked as received. You can now leave a review!');
     }
 
     public function storeReview(Request $request, Order $order)

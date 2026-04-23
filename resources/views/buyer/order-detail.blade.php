@@ -119,6 +119,38 @@
         </div>
     @endif
 
+    {{-- Confirm Receipt --}}
+    @if($order->status?->value === 'shipped')
+        <div class="card p-5 mb-5 border-primary-200 bg-primary-50" x-data="{ confirm: false }">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 bg-primary-100 rounded-xl flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800">Did you receive your order?</h3>
+                    <p class="text-xs text-gray-500">Confirm receipt to complete the order and unlock reviews.</p>
+                </div>
+            </div>
+            <template x-if="!confirm">
+                <button @click="confirm = true" class="btn-primary text-sm py-2 px-5">
+                    Yes, I Received My Order
+                </button>
+            </template>
+            <template x-if="confirm">
+                <div class="bg-white border border-primary-200 rounded-xl p-4">
+                    <p class="text-sm font-medium text-gray-700 mb-3">Confirm that you received this order?</p>
+                    <div class="flex gap-2">
+                        <form action="{{ route('buyer.orders.confirm-receipt', $order) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="btn-primary text-sm py-2 px-4">Confirm Receipt</button>
+                        </form>
+                        <button @click="confirm = false" class="btn-secondary text-sm py-2 px-4">Not Yet</button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    @endif
+
     {{-- Cancel Button --}}
     @if($order->canBeCancelledByBuyer())
         <div class="card p-5 mb-5" x-data="{ confirm: false }">

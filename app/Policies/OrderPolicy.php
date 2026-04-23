@@ -22,6 +22,11 @@ class OrderPolicy
         return $user->id === $order->seller_id || $user->isAdmin();
     }
 
+    public function confirmReceipt(User $user, Order $order): bool
+    {
+        return $user->id === $order->buyer_id && $order->status === \App\Enums\OrderStatus::Shipped;
+    }
+
     public function review(User $user, Order $order): bool
     {
         return $user->id === $order->buyer_id;

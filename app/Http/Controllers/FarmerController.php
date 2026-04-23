@@ -113,6 +113,10 @@ class FarmerController extends Controller
 
         $newStatus = OrderStatus::from($request->status);
 
+        if ($newStatus === OrderStatus::Delivered) {
+            return back()->with('error', 'Only the buyer can confirm delivery.');
+        }
+
         try {
             $this->orderService->transition($order, $newStatus, auth()->user(), $request->notes);
         } catch (\RuntimeException $e) {
