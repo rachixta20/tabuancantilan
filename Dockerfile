@@ -15,16 +15,13 @@ RUN npm run build
 # ── Stage 2: PHP application ─────────────────────────────────────────────────
 FROM php:8.2-cli
 
+# install-php-extensions uses pre-compiled binaries — no source compilation
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN install-php-extensions mbstring pdo pdo_mysql pdo_pgsql gd exif pcntl bcmath
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git curl zip unzip \
-    libonig-dev \
-    libpng-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libxml2-dev \
-    libpq-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
