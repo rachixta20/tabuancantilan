@@ -222,6 +222,15 @@ class FarmerController extends Controller
         return back()->with('success', 'Reply posted.');
     }
 
+    public function updateMinimumOrder(Request $request)
+    {
+        $request->validate(['minimum_order' => 'nullable|numeric|min:0|max:99999']);
+        $value = ($request->minimum_order && $request->minimum_order > 0) ? $request->minimum_order : null;
+        auth()->user()->update(['minimum_order' => $value]);
+        $msg = $value ? "Minimum order set to ₱" . number_format($value, 2) . "." : 'Minimum order removed.';
+        return back()->with('success', $msg);
+    }
+
     public function toggleFreeDelivery()
     {
         $user = auth()->user();

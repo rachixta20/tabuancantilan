@@ -57,6 +57,32 @@
             {{-- Summary --}}
             <div class="card p-5 h-fit sticky top-20">
                 <h3 class="font-semibold text-gray-800 mb-4">Order Summary</h3>
+
+                {{-- Minimum order warnings --}}
+                @php
+                    $grouped = $cartItems->groupBy(fn($i) => $i->product->user_id);
+                    $minWarnings = [];
+                    foreach ($grouped as $sellerId => $items) {
+                        $seller = $items->first()->product->seller;
+                        if ($seller?->minimum_order) {
+                            $sub = $items->sum(fn($i) => $i->product->price * $i->quantity);
+                            if ($sub < $seller->minimum_order) {
+                                $minWarnings[] = [
+                                    'name'    => $seller->farm_name ?: $seller->name,
+                                    'current' => $sub,
+                                    'min'     => $seller->minimum_order,
+                                    'needed'  => $seller->minimum_order - $sub,
+                                ];
+                            }
+                        }
+                    }
+                @endphp
+                @foreach($minWarnings as $w)
+                    <div class="mb-3 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+                        <p class="font-semibold">⚠ {{ $w['name'] }} has a minimum order</p>
+                        <p class="mt-0.5">Add ₱{{ number_format($w['needed'], 2) }} more to meet the ₱{{ number_format($w['min'], 2) }} minimum.</p>
+                    </div>
+                @endforeach
                 <div class="space-y-2 text-sm mb-4">
                     <div class="flex justify-between text-gray-600">
                         <span>Subtotal ({{ $cartItems->count() }} items)</span>

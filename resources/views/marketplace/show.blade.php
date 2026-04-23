@@ -137,6 +137,22 @@
                 @endif
             </div>
 
+            {{-- Seller policies --}}
+            @if($product->seller->free_delivery || $product->seller->minimum_order)
+                <div class="mt-3 flex flex-wrap gap-2">
+                    @if($product->seller->free_delivery)
+                        <span class="inline-flex items-center gap-1 text-xs bg-primary-50 text-primary-700 border border-primary-200 px-2.5 py-1 rounded-lg font-medium">
+                            🚚 Free Delivery
+                        </span>
+                    @endif
+                    @if($product->seller->minimum_order)
+                        <span class="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-lg font-medium">
+                            🛒 Min. order ₱{{ number_format($product->seller->minimum_order, 2) }}
+                        </span>
+                    @endif
+                </div>
+            @endif
+
             @auth
                 <div class="mt-3 text-right">
                     <a href="{{ route('reports.create', ['product_id' => $product->id, 'user_id' => $product->seller_id]) }}"

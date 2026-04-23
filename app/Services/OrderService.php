@@ -36,6 +36,14 @@ class OrderService
 
                 $seller         = User::find($sellerId);
                 $subtotal       = $items->sum(fn($item) => $item->product->price * $item->quantity);
+
+                if ($seller?->minimum_order && $subtotal < $seller->minimum_order) {
+                    $sellerName = $seller->farm_name ?: $seller->name;
+                    throw new \RuntimeException(
+                        "Minimum order for {$sellerName} is ₱" . number_format($seller->minimum_order, 2) . ". Your subtotal is ₱" . number_format($subtotal, 2) . "."
+                    );
+                }
+
                 $deliveryFee    = ($paymentMethod->hasDeliveryFee() && !($seller?->free_delivery))
                     ? config('marketplace.delivery_fee', 50)
                     : 0;

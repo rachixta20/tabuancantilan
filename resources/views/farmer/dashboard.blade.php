@@ -116,26 +116,61 @@
         </div>
     </div>
 
-    {{-- Free Delivery Toggle --}}
+    {{-- Store Settings --}}
     <div class="card p-5 mt-6">
-        <div class="flex items-center justify-between gap-4">
-            <div>
-                <h3 class="font-semibold text-gray-800">🚚 Free Delivery</h3>
-                <p class="text-xs text-gray-500 mt-0.5">
-                    @if(auth()->user()->free_delivery)
-                        <span class="text-primary-600 font-medium">Enabled</span> — buyers won't be charged a delivery fee on your orders.
-                    @else
-                        <span class="text-gray-400">Disabled</span> — standard delivery fee applies to your orders.
-                    @endif
-                </p>
+        <h3 class="font-semibold text-gray-800 mb-4">🏪 Store Settings</h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+
+            {{-- Free Delivery --}}
+            <div class="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                <div>
+                    <p class="text-sm font-semibold text-gray-700">🚚 Free Delivery</p>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                        @if(auth()->user()->free_delivery)
+                            <span class="text-primary-600 font-medium">Enabled</span>
+                        @else
+                            <span class="text-gray-400">Disabled</span> — standard fee applies
+                        @endif
+                    </p>
+                </div>
+                <form action="{{ route('farmer.free-delivery.toggle') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                            class="{{ auth()->user()->free_delivery ? 'btn-danger' : 'btn-primary' }} text-xs py-1.5 px-3 shrink-0">
+                        {{ auth()->user()->free_delivery ? 'Disable' : 'Enable' }}
+                    </button>
+                </form>
             </div>
-            <form action="{{ route('farmer.free-delivery.toggle') }}" method="POST">
-                @csrf
-                <button type="submit"
-                        class="{{ auth()->user()->free_delivery ? 'btn-danger' : 'btn-primary' }} text-sm py-2 px-4 shrink-0">
-                    {{ auth()->user()->free_delivery ? 'Disable' : 'Enable Free Delivery' }}
-                </button>
-            </form>
+
+            {{-- Minimum Order --}}
+            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100" x-data="{ open: false }">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">🛒 Minimum Order</p>
+                        <p class="text-xs text-gray-500 mt-0.5">
+                            @if(auth()->user()->minimum_order)
+                                <span class="text-primary-600 font-medium">₱{{ number_format(auth()->user()->minimum_order, 2) }}</span>
+                            @else
+                                <span class="text-gray-400">No minimum set</span>
+                            @endif
+                        </p>
+                    </div>
+                    <button @click="open = !open" class="btn-outline text-xs py-1.5 px-3 shrink-0">Set</button>
+                </div>
+                <div x-show="open" x-cloak class="mt-3 pt-3 border-t border-gray-200">
+                    <form action="{{ route('farmer.minimum-order.update') }}" method="POST" class="flex gap-2 items-center">
+                        @csrf
+                        <span class="text-sm text-gray-500">₱</span>
+                        <input type="number" name="minimum_order" min="0" step="0.01"
+                               value="{{ auth()->user()->minimum_order }}"
+                               placeholder="0.00 = no minimum"
+                               class="input text-sm py-1.5 flex-1">
+                        <button type="submit" class="btn-primary text-xs py-1.5 px-3">Save</button>
+                    </form>
+                    <p class="text-xs text-gray-400 mt-1">Set to 0 or leave blank to remove the minimum.</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
