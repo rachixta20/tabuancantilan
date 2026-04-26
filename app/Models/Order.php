@@ -16,6 +16,7 @@ class Order extends Model
         'order_number', 'buyer_id', 'seller_id', 'subtotal', 'delivery_fee',
         'platform_fee', 'seller_payout', 'total', 'status', 'payment_status',
         'payment_method', 'delivery_address', 'notes', 'delivered_at',
+        'payment_reference',
         'delivery_otp', 'delivery_otp_expires_at', 'payout_status', 'payout_due_at', 'payout_released_at',
     ];
 

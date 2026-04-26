@@ -45,7 +45,7 @@
                             <span class="text-gray-400 font-normal ml-1">(front side, clearly visible)</span>
                         </label>
                         <label for="id_doc_input"
-                               class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-gray-300 rounded-xl p-5 cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-colors @error('id_document') border-red-400 bg-red-50 @enderror">
+                               class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed rounded-xl p-5 cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-colors {{ $errors->has('id_document') ? 'border-red-400 bg-red-50' : 'border-gray-300' }}">
                             <span class="text-3xl">🪪</span>
                             <span class="text-sm font-medium text-gray-600" x-text="name || 'Click to choose file'"></span>
                             <span class="text-xs text-gray-400">JPG, PNG, PDF up to 4MB</span>
@@ -62,7 +62,7 @@
                             <span class="text-gray-400 font-normal ml-1">(face + ID must both be visible)</span>
                         </label>
                         <label for="selfie_input"
-                               class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-amber-300 rounded-xl p-5 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition-colors @error('selfie_photo') border-red-400 bg-red-50 @enderror">
+                               class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed rounded-xl p-5 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition-colors {{ $errors->has('selfie_photo') ? 'border-red-400 bg-red-50' : 'border-amber-300' }}">
                             <template x-if="preview">
                                 <img :src="preview" class="h-24 object-contain rounded-lg">
                             </template>

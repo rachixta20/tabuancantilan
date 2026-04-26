@@ -13,9 +13,10 @@ class PlaceOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method'   => ['required', Rule::enum(PaymentMethod::class)],
-            'delivery_address' => ['nullable', 'required_if:payment_method,cod', 'string', 'max:500'],
-            'notes'            => ['nullable', 'string', 'max:500'],
+            'payment_method'    => ['required', Rule::enum(PaymentMethod::class)],
+            'delivery_address'  => ['nullable', 'required_unless:payment_method,walkin', 'string', 'max:500'],
+            'payment_reference' => ['nullable', 'required_if:payment_method,gcash', 'required_if:payment_method,maya', 'string', 'max:100'],
+            'notes'             => ['nullable', 'string', 'max:500'],
         ];
     }
 }

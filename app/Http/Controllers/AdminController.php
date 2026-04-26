@@ -236,6 +236,10 @@ class AdminController extends Controller
             'delivery_fee'    => Setting::get('delivery_fee', config('marketplace.delivery_fee')),
             'location'        => Setting::get('location', config('marketplace.location')),
             'city'            => Setting::get('city', config('marketplace.city')),
+            'gcash_number'    => Setting::get('gcash_number', ''),
+            'gcash_name'      => Setting::get('gcash_name', ''),
+            'maya_number'     => Setting::get('maya_number', ''),
+            'maya_name'       => Setting::get('maya_name', ''),
         ]);
     }
 
@@ -246,10 +250,14 @@ class AdminController extends Controller
             'delivery_fee'    => 'required|numeric|min:0',
             'location'        => 'required|string|max:100',
             'city'            => 'required|string|max:150',
+            'gcash_number'    => 'nullable|string|max:20',
+            'gcash_name'      => 'nullable|string|max:100',
+            'maya_number'     => 'nullable|string|max:20',
+            'maya_name'       => 'nullable|string|max:100',
         ]);
 
         foreach ($data as $key => $value) {
-            Setting::set($key, $value);
+            Setting::set($key, $value ?? '');
         }
 
         return back()->with('success', 'Settings saved successfully.');

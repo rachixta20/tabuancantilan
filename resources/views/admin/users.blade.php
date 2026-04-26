@@ -32,7 +32,7 @@
 
 <div class="card overflow-hidden">
     <div class="overflow-x-auto">
-    <table class="w-full text-sm min-w-[700px]">
+    <table class="w-full text-sm min-w-175">
         <thead>
             <tr class="bg-gray-50 text-left">
                 <th class="px-5 py-3.5 font-semibold text-gray-600">User</th>

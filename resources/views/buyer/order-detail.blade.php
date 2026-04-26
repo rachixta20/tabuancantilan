@@ -40,6 +40,22 @@
             </div>
         </div>
 
+        @if($order->payment_method?->isEwallet() && $order->payment_status?->value !== 'paid')
+            <div class="mb-5 px-4 py-3.5 bg-amber-50 border border-amber-200 rounded-xl text-sm">
+                <p class="font-semibold text-amber-800 flex items-center gap-2">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Payment Pending Verification
+                </p>
+                <p class="text-amber-700 mt-1">
+                    Your {{ $order->payment_method->label() }} payment is being verified by the seller.
+                    @if($order->payment_reference)
+                        Reference: <span class="font-mono font-semibold">{{ $order->payment_reference }}</span>
+                    @endif
+                </p>
+                <p class="text-amber-600 text-xs mt-1">Your order will be confirmed once the seller verifies your payment.</p>
+            </div>
+        @endif
+
         @if($order->delivery_address)
             <div class="bg-gray-50 rounded-xl p-3 text-sm mb-5">
                 <p class="text-gray-400 text-xs mb-1">Delivery Address</p>

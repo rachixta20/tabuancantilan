@@ -231,6 +231,17 @@ class FarmerController extends Controller
         return back()->with('success', $msg);
     }
 
+    public function confirmPayment(Order $order)
+    {
+        abort_if($order->seller_id !== auth()->id(), 403);
+        abort_if(!$order->payment_method?->isEwallet(), 400);
+        abort_if($order->payment_status?->value === 'paid', 400);
+
+        $order->update(['payment_status' => 'paid']);
+
+        return back()->with('success', 'Payment confirmed for order ' . $order->order_number . '.');
+    }
+
     public function toggleFreeDelivery()
     {
         $user = auth()->user();

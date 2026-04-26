@@ -76,6 +76,42 @@
             </div>
         </div>
 
+        {{-- E-wallet Settings --}}
+        <div class="card p-6">
+            <h3 class="font-semibold text-gray-800 mb-1">E-wallet Payment Accounts</h3>
+            <p class="text-xs text-gray-400 mb-4">These details are shown to buyers at checkout when they select GCash or Maya. Leave blank to hide that payment option.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="label">GCash Number</label>
+                    <input type="text" name="gcash_number" value="{{ old('gcash_number', $gcash_number) }}"
+                           maxlength="20" placeholder="e.g. 09xx-xxx-xxxx"
+                           class="input @error('gcash_number') border-red-400 @enderror">
+                    @error('gcash_number')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label class="label">GCash Account Name</label>
+                    <input type="text" name="gcash_name" value="{{ old('gcash_name', $gcash_name) }}"
+                           maxlength="100" placeholder="Full name on GCash"
+                           class="input @error('gcash_name') border-red-400 @enderror">
+                    @error('gcash_name')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label class="label">Maya Number</label>
+                    <input type="text" name="maya_number" value="{{ old('maya_number', $maya_number) }}"
+                           maxlength="20" placeholder="e.g. 09xx-xxx-xxxx"
+                           class="input @error('maya_number') border-red-400 @enderror">
+                    @error('maya_number')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label class="label">Maya Account Name</label>
+                    <input type="text" name="maya_name" value="{{ old('maya_name', $maya_name) }}"
+                           maxlength="100" placeholder="Full name on Maya"
+                           class="input @error('maya_name') border-red-400 @enderror">
+                    @error('maya_name')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                </div>
+            </div>
+        </div>
+
         {{-- Current Values Preview --}}
         <div class="card p-5 bg-gray-50 border-dashed">
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Current Live Values</p>

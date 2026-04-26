@@ -80,7 +80,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
         {{-- Sidebar --}}
-        <div class="lg:col-span-1 space-y-3 max-h-[600px] overflow-y-auto pr-1 scrollbar-hide">
+        <div class="lg:col-span-1 space-y-3 max-h-150 overflow-y-auto pr-1 scrollbar-hide">
 
             @php $liveCount = $sellers->where('is_live', true)->count(); @endphp
             @if($liveCount > 0)

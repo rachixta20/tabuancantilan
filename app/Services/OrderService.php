@@ -61,6 +61,8 @@ class OrderService
                     'seller_payout'    => $sellerPayout,
                     'total'            => $subtotal + $deliveryFee,
                     'payment_method'   => $data['payment_method'],
+                    'payment_reference' => $data['payment_reference'] ?? null,
+                    'payment_status'   => $paymentMethod->isEwallet() ? 'pending' : 'pending',
                     'delivery_address' => $data['delivery_address'] ?? null,
                     'notes'            => $data['notes'] ?? null,
                 ]);

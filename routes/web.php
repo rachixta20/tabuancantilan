@@ -75,6 +75,7 @@ Route::middleware(['auth', 'role:farmer'])->prefix('farmer')->name('farmer.')->g
     Route::delete('/products/{product}', [FarmerController::class, 'deleteProduct'])->name('products.delete');
     Route::get('/orders', [FarmerController::class, 'orders'])->name('orders');
     Route::patch('/orders/{order}/status', [FarmerController::class, 'updateOrderStatus'])->name('orders.status');
+    Route::patch('/orders/{order}/confirm-payment', [FarmerController::class, 'confirmPayment'])->name('orders.confirm-payment');
 });
 
 // Reports

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Cart\PlaceOrderRequest;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 
@@ -65,7 +66,15 @@ class CartController extends Controller
     {
         $cartItems = auth()->user()->carts()->with('product.seller')->get();
         if ($cartItems->isEmpty()) return redirect()->route('cart.index');
-        return view('cart.checkout', compact('cartItems'));
+
+        $ewalletSettings = [
+            'gcash_number' => Setting::get('gcash_number', ''),
+            'gcash_name'   => Setting::get('gcash_name', ''),
+            'maya_number'  => Setting::get('maya_number', ''),
+            'maya_name'    => Setting::get('maya_name', ''),
+        ];
+
+        return view('cart.checkout', compact('cartItems', 'ewalletSettings'));
     }
 
     public function placeOrder(PlaceOrderRequest $request)
