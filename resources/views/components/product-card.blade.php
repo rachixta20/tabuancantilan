@@ -10,6 +10,12 @@
         @if($product->discount_percent)
             <span class="absolute top-2 right-2 badge bg-red-500 text-white">-{{ $product->discount_percent }}%</span>
         @endif
+        @if($product->freshness)
+            @php $f = $product->freshness; @endphp
+            <span class="absolute bottom-2 left-2 badge bg-{{ $f['color'] }}-100 text-{{ $f['color'] }}-700 text-xs">
+                {{ $f['icon'] }} {{ $f['label'] }}
+            </span>
+        @endif
     </a>
     <div class="p-4 flex flex-col flex-1">
         <div class="flex items-start justify-between gap-2 mb-1">

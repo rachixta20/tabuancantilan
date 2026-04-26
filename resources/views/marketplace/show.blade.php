@@ -76,6 +76,38 @@
                 @endif
             </div>
 
+            {{-- Harvest & Freshness --}}
+            @if($product->harvest_date)
+                @php $f = $product->freshness; $daysLeft = $product->days_until_expiry; @endphp
+                <div class="mb-6 rounded-xl border {{ $f ? 'border-'.$f['color'].'-200 bg-'.$f['color'].'-50' : 'border-gray-200 bg-gray-50' }} p-4">
+                    <div class="flex items-center gap-3">
+                        <div class="text-2xl">{{ $f['icon'] ?? '📅' }}</div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm text-gray-800">
+                                {{ $f['label'] ?? 'Harvest Info' }}
+                                @if($f && $f['color'] !== 'gray')
+                                    <span class="ml-2 badge bg-{{ $f['color'] }}-100 text-{{ $f['color'] }}-700">{{ $f['label'] }}</span>
+                                @endif
+                            </p>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                Harvested on <strong>{{ $product->harvest_date->format('F d, Y') }}</strong>
+                                ({{ $product->days_harvested === 0 ? 'today' : ($product->days_harvested === 1 ? 'yesterday' : $product->days_harvested . ' days ago') }})
+                            </p>
+                            @if($daysLeft !== null)
+                                @if($daysLeft > 0)
+                                    <p class="text-xs text-gray-500 mt-0.5">
+                                        Best consumed within <strong>{{ $daysLeft }} {{ Str::plural('day', $daysLeft) }}</strong>
+                                        (by {{ $product->harvest_date->addDays($product->shelf_life_days)->format('M d, Y') }})
+                                    </p>
+                                @else
+                                    <p class="text-xs text-red-500 mt-0.5 font-medium">Past recommended freshness date</p>
+                                @endif
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @auth
                 @if(!auth()->user()->isFarmer() && !auth()->user()->isAdmin())
                     <form action="{{ route('cart.add', $product) }}" method="POST" class="flex gap-3 mb-4">
